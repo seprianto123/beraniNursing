@@ -1,0 +1,2645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BERANI - Belajar English Rawat Asuhan Nyata Interaktif</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar & Animasi Halus */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.85); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .mic-recording {
+            animation: pulse-ring 1.5s infinite;
+        }
+        .fade-in {
+            animation: fadeIn 0.25s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white min-h-screen flex flex-col">
+
+    <!-- Toast Notification Container (Pengganti alert) -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- Custom Modal Interaktif -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden fade-in border border-slate-100">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 id="modal-title" class="text-lg font-heading font-bold text-slate-900">Konfirmasi</h3>
+                    <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                <div id="modal-body" class="text-slate-600 text-sm leading-relaxed max-h-[65vh] overflow-y-auto pr-1"></div>
+                <div id="modal-footer" class="mt-6 flex justify-end gap-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== VIEW 1: AUTHENTICATION (LOGIN & REGISTER) ==================== -->
+    <!-- Penambahan background gambar STIKes dengan overlay gelap agar form tetap kontras & jelas -->
+    <section id="auth-view" class="min-h-screen flex items-center justify-center p-4 relative bg-cover bg-center" style="background-image: url('gambar stikes.jpg');">
+        <!-- Overlay Gelap Transparan -->
+        <div class="absolute inset-0 bg-slate-950/70 backdrop-blur-[2px]"></div>
+
+        <div class="max-w-5xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 relative z-10">
+            
+            <!-- Left Branding Panel -->
+            <div class="lg:col-span-5 bg-gradient-to-br from-brand-600 to-emerald-700 p-8 sm:p-10 text-white flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="absolute -left-12 -bottom-12 w-56 h-56 bg-teal-300/10 rounded-full blur-2xl"></div>
+                
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide mb-6 border border-white/20">
+                        <i class="fa-solid fa-heart-pulse text-emerald-200"></i>
+                        <span>AI Nursing Communication Lab</span>
+                    </div>
+                    <h1 class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-3">
+                        BERANI
+                    </h1>
+                    <p class="text-brand-100 font-medium text-sm sm:text-base mb-5">
+                        Belajar English Rawat Asuhan Nyata Interaktif
+                    </p>
+                    <p class="text-white/85 text-sm leading-relaxed">
+                        Platform simulasi klinis berbasis kecerdasan buatan yang melatih kepercayaan diri mahasiswa keperawatan dalam berkomunikasi bahasa Inggris dengan pasien secara terapeutik, akurat, dan empatik.
+                    </p>
+                </div>
+
+                <div class="relative z-10 mt-8 pt-6 border-t border-white/20 space-y-3 text-xs text-brand-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><i class="fa-solid fa-microphone-lines"></i></div>
+                        <span>Simulasi Pasien Virtual dengan Voice Recognition</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><i class="fa-solid fa-clipboard-check"></i></div>
+                        <span>Penilaian Otomatis Berbasis 4 Rubrik Klinis</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center shrink-0"><i class="fa-solid fa-brain"></i></div>
+                        <span>Jurnal Refleksi dengan AI Mitra Bertanya</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Auth Forms Panel -->
+            <div class="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-center bg-white">
+                <!-- Tab Switcher -->
+                <div class="flex p-1 bg-slate-100 rounded-xl mb-6 max-w-xs">
+                    <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-white text-brand-700 shadow-sm transition">
+                        Masuk (Login)
+                    </button>
+                    <button type="button" id="tab-register-btn" onclick="switchAuthTab('register')" class="flex-1 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+                        Daftar Akun
+                    </button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <h2 class="font-heading text-2xl font-bold text-slate-900">Selamat Datang Kembali</h2>
+                        <p class="text-slate-500 text-sm mt-1">Masuk menggunakan akun Mahasiswa atau Dosen Anda.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Email atau NIM / NIDN</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <i class="fa-solid fa-user-nurse"></i>
+                            </span>
+                            <input type="text" id="login-identifier" required placeholder="Contoh: siti.aminah@mhs.ac.id atau 2023101045" 
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Kata Sandi</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input type="password" id="login-password" required placeholder="••••••••" 
+                                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-md shadow-brand-600/20 transition flex items-center justify-center gap-2">
+                        <span>Masuk ke Aplikasi</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="register-form" onsubmit="handleRegister(event)" class="space-y-3.5 hidden">
+                    <div>
+                        <h2 class="font-heading text-2xl font-bold text-slate-900">Buat Akun Baru</h2>
+                        <p class="text-slate-500 text-sm mt-1">Pilih peran Anda untuk mendaftar ke sistem BERANI.</p>
+                    </div>
+
+                    <!-- Role Selector -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="reg-role" value="mahasiswa" checked class="peer sr-only" onchange="updateRegRoleFields()">
+                            <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-brand-600 peer-checked:bg-brand-50/60 transition flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-800">Mahasiswa</div>
+                                    <div class="text-[11px] text-slate-500">User / Praktikan</div>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="reg-role" value="dosen" class="peer sr-only" onchange="updateRegRoleFields()">
+                            <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/60 transition flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                                    <i class="fa-solid fa-user-doctor"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-slate-800">Dosen</div>
+                                    <div class="text-[11px] text-slate-500">Admin / Pengampu</div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap & Gelar</label>
+                            <input type="text" id="reg-name" required placeholder="Siti Aminah / Ns. Budi" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label id="reg-id-label" class="block text-xs font-semibold text-slate-700 mb-1">NIM (Nomor Induk Mahasiswa)</label>
+                            <input type="text" id="reg-idnumber" required placeholder="2023101045" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label id="reg-extra-label" class="block text-xs font-semibold text-slate-700 mb-1">Semester</label>
+                            <input type="text" id="reg-extra" required placeholder="Semester 5" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Alamat Email Institusi</label>
+                            <input type="email" id="reg-email" required placeholder="nama@kampus.ac.id" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+                        <input type="password" id="reg-password" required minlength="4" placeholder="Minimal 4 karakter" 
+                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    </div>
+
+                    <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-md transition">
+                        Daftar & Masuk Sekarang
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MAIN APP SHELL (AFTER LOGIN) ==================== -->
+    <div id="app-shell" class="hidden flex-1 flex flex-col">
+        
+        <!-- Top Navigation Bar -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-emerald-600 text-white flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-stethoscope text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-heading font-extrabold text-lg text-slate-900 tracking-tight">BERANI</span>
+                            <span id="nav-role-badge" class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-brand-100 text-brand-800">
+                                Mahasiswa
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 hidden sm:block">Belajar English Rawat Asuhan Nyata Interaktif</p>
+                    </div>
+                </div>
+
+                <!-- User Profile & Logout -->
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="text-right hidden sm:block">
+                        <div id="nav-user-name" class="text-sm font-bold text-slate-800">Nama Pengguna</div>
+                        <div id="nav-user-id" class="text-xs text-slate-500">NIM: 123456</div>
+                    </div>
+                    <div id="nav-user-avatar" class="w-9 h-9 rounded-full bg-brand-600 text-white font-bold text-sm flex items-center justify-center">
+                        S
+                    </div>
+                    <button type="button" onclick="handleLogout()" title="Keluar Akun" class="p-2.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition flex items-center gap-1.5 text-xs font-semibold">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span class="hidden md:inline">Keluar</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==================== VIEW 2: MAHASISWA (USER) DASHBOARD ==================== -->
+        <main id="student-dashboard" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            
+            <!-- Student 4 Main Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 mb-6 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
+                <button type="button" onclick="switchStudentTab('progress')" id="st-tab-progress" class="px-4 py-2 rounded-xl text-sm font-semibold bg-brand-600 text-white shadow-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard Progres Belajar</span>
+                </button>
+                <button type="button" onclick="switchStudentTab('cases')" id="st-tab-cases" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-hospital-user"></i>
+                    <span>Bank Kasus</span>
+                </button>
+                <button type="button" onclick="switchStudentTab('simulation')" id="st-tab-simulation" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Pasien Virtual AI</span>
+                </button>
+                <button type="button" onclick="switchStudentTab('reflection')" id="st-tab-reflection" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-book-medical"></i>
+                    <span>Jurnal Refleksi AI</span>
+                </button>
+            </div>
+
+            <!-- MENU 1: DASHBOARD PROGRES BELAJAR MAHASISWA -->
+            <div id="student-view-progress" class="fade-in space-y-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-brand-700 via-brand-600 to-emerald-600 rounded-2xl p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+                    <div>
+                        <span class="px-2.5 py-1 rounded-full bg-white/15 text-brand-100 text-[11px] font-bold uppercase tracking-wider">Rekapitulasi Kompetensi Klinis</span>
+                        <h2 id="prog-welcome-title" class="font-heading text-xl sm:text-2xl font-bold mt-2">Halo, Mahasiswa!</h2>
+                        <p class="text-sm text-brand-100 mt-1 max-w-2xl">
+                            Pantau perkembangan kepercayaan diri, penguasaan kosakata keperawatan, serta evaluasi dan feedback langsung dari dosen pengampu Anda.
+                        </p>
+                    </div>
+                    <div class="flex gap-3 shrink-0">
+                        <button type="button" onclick="switchStudentTab('cases')" class="px-4 py-2.5 bg-white text-brand-800 hover:bg-brand-50 font-bold text-xs rounded-xl shadow transition flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i>
+                            <span>Mulai Latihan Baru</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 KPI Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-stethoscope"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Total Sesi Latihan</div>
+                            <div id="prog-total-sessions" class="text-2xl font-heading font-extrabold text-slate-900">0</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Rata-rata Skor AI</div>
+                            <div id="prog-avg-score" class="text-2xl font-heading font-extrabold text-slate-900">0 <span class="text-xs font-normal text-slate-400">/100</span></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Rata-rata Nilai Dosen</div>
+                            <div id="prog-lecturer-avg" class="text-2xl font-heading font-extrabold text-slate-900">-</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-slate-500">Level Kepercayaan Diri</div>
+                            <div id="prog-confidence-level" class="text-base font-heading font-extrabold text-slate-900 mt-0.5">Berkembang</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Row: 4 Aspek Rubrik & Grafik Perkembangan Skor -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Rata-rata per 4 Aspek Rubrik -->
+                    <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                        <div>
+                            <h3 class="font-heading font-bold text-base text-slate-900">Rata-rata Skor per 4 Aspek Rubrik</h3>
+                            <p class="text-xs text-slate-500">Akumulasi performa komunikasi bahasa Inggris klinis Anda</p>
+                        </div>
+
+                        <div class="space-y-4 pt-1">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-700"><i class="fa-solid fa-comments text-brand-500 mr-1.5"></i>1. Fluency & Confidence</span>
+                                    <span id="prog-aspect-fluency-val" class="text-brand-700">0 / 100</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="prog-aspect-fluency-bar" class="h-full bg-brand-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-700"><i class="fa-solid fa-notes-medical text-indigo-500 mr-1.5"></i>2. Clinical Vocabulary</span>
+                                    <span id="prog-aspect-vocab-val" class="text-indigo-700">0 / 100</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="prog-aspect-vocab-bar" class="h-full bg-indigo-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-700"><i class="fa-solid fa-hand-holding-heart text-emerald-500 mr-1.5"></i>3. Empathy & Therapeutic Communication</span>
+                                    <span id="prog-aspect-empathy-val" class="text-emerald-700">0 / 100</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="prog-aspect-empathy-bar" class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-700"><i class="fa-solid fa-spell-check text-amber-500 mr-1.5"></i>4. Grammar & Clarity</span>
+                                    <span id="prog-aspect-grammar-val" class="text-amber-700">0 / 100</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="prog-aspect-grammar-bar" class="h-full bg-amber-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel Analisis Fokus Perbaikan Otomatis -->
+                        <div class="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200">
+                            <div class="text-xs font-bold text-amber-900 flex items-center gap-1.5 mb-1">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                                <span>Analisis Fokus Perbaikan Otomatis:</span>
+                            </div>
+                            <p id="prog-weakness-summary" class="text-xs text-amber-900/90 leading-relaxed">
+                                Belum ada data latihan untuk dianalisis.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Grafik Perkembangan Skor per Sesi (SVG Chart) -->
+                    <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-heading font-bold text-base text-slate-900">Grafik Perkembangan Skor per Sesi Latihan</h3>
+                            <p class="text-xs text-slate-500 mb-4">Tren peningkatan kepercayaan diri & skor evaluasi simulasi Anda</p>
+                        </div>
+                        <div id="prog-chart-container" class="w-full h-56 bg-slate-50/80 rounded-xl border border-slate-100 p-3 flex items-center justify-center">
+                            <!-- SVG Chart dirender via JS -->
+                        </div>
+                        <div class="mt-3 flex items-center justify-between text-[11px] text-slate-400">
+                            <span>Sesi Terlama &rarr; Sesi Terbaru</span>
+                            <span class="text-brand-600 font-semibold"><i class="fa-solid fa-circle text-[8px] mr-1"></i>Skor Total Rubrik</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Kotak Masuk Feedback & Penilaian Terbaru dari Dosen -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-heading font-bold text-base text-slate-900">Feedback & Penilaian Terbaru dari Dosen</h3>
+                                <p class="text-xs text-slate-500">Catatan evaluasi dan skor resmi dari dosen pengampu mata kuliah</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="switchStudentTab('reflection'); switchReflectionSubTab('history');" class="text-xs font-bold text-brand-600 hover:underline">
+                            Lihat Semua Riwayat &rarr;
+                        </button>
+                    </div>
+                    <div id="prog-lecturer-feedback-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Diisi via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU 2: BANK KASUS KEPERAWATAN -->
+            <div id="student-view-cases" class="hidden fade-in space-y-6">
+                <div class="bg-gradient-to-r from-brand-700 to-emerald-700 rounded-2xl p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-brand-200">Siap Praktik Berbicara?</span>
+                        <h2 class="font-heading text-xl sm:text-2xl font-bold mt-1">Pilih Skenario Asuhan Keperawatan</h2>
+                        <p class="text-sm text-brand-100 mt-1 max-w-2xl">
+                            Jangan takut salah tata bahasa! Gunakan fitur bantuan frasa medis (scaffolding) dan bicaralah secara alami dengan pasien virtual AI.
+                        </p>
+                    </div>
+                    <div class="bg-white/15 backdrop-blur-md px-4 py-3 rounded-xl border border-white/20 shrink-0">
+                        <div class="text-xs text-brand-100">Rata-rata Skor Speaking Anda</div>
+                        <div id="student-avg-score" class="text-2xl font-heading font-extrabold">0 <span class="text-xs font-normal">/ 100</span></div>
+                    </div>
+                </div>
+
+                <!-- Filter Tingkat Kesulitan -->
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <h3 class="font-heading font-bold text-slate-800 text-lg">Daftar Kasus Tersedia (<span id="cases-count">0</span>)</h3>
+                    <div class="flex gap-2">
+                        <select id="filter-difficulty" onchange="renderStudentCases()" class="bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <option value="ALL">Semua Tingkat Kesulitan</option>
+                            <option value="Pemula">Pemula (Dasar)</option>
+                            <option value="Menengah">Menengah (Intermediate)</option>
+                            <option value="Lanjut">Lanjut (Kritis / Advanced)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Grid Kartu Kasus -->
+                <div id="student-cases-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Diisi via JS -->
+                </div>
+            </div>
+
+            <!-- MENU 3: PASIEN VIRTUAL AI -->
+            <div id="student-view-simulation" class="hidden fade-in">
+                <div id="no-case-selected" class="bg-white rounded-2xl border border-slate-200 p-10 text-center max-w-lg mx-auto my-8">
+                    <div class="w-16 h-16 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 text-2xl">
+                        <i class="fa-solid fa-user-nurse"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-lg text-slate-900">Belum Ada Kasus Dipilih</h3>
+                    <p class="text-sm text-slate-500 mt-2 mb-5">Silakan pilih salah satu skenario kasus klinis dari Bank Kasus untuk memulai percakapan dengan Pasien Virtual AI.</p>
+                    <button type="button" onclick="switchStudentTab('cases')" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-xl transition">
+                        Pilih Kasus Sekarang
+                    </button>
+                </div>
+
+                <!-- Active Simulation Workspace -->
+                <div id="active-simulation-workspace" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    
+                    <!-- Left Column: Patient Info & Scaffolding -->
+                    <div class="lg:col-span-4 space-y-4">
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <span id="sim-dept-badge" class="px-2.5 py-1 rounded-lg bg-brand-50 text-brand-700 text-xs font-bold">Bedah / Post-Op</span>
+                                <span id="sim-diff-badge" class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 text-xs font-bold">Menengah</span>
+                            </div>
+                            <h3 id="sim-case-title" class="font-heading font-bold text-lg text-slate-900">Judul Kasus</h3>
+                            
+                            <div class="mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2 text-xs">
+                                <div class="flex items-center gap-2.5">
+                                    <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
+                                        <i class="fa-solid fa-bed-pulse"></i>
+                                    </div>
+                                    <div>
+                                        <div id="sim-patient-name" class="font-bold text-slate-800 text-sm">Mr. John Doe (54 thn)</div>
+                                        <div id="sim-chief-complaint" class="text-slate-500">Keluhan: Nyeri luka operasi</div>
+                                    </div>
+                                </div>
+                                <p id="sim-scenario-desc" class="text-slate-600 pt-2 border-t border-slate-200/70 leading-relaxed">
+                                    Deskripsi rekam medis singkat...
+                                </p>
+                            </div>
+
+                            <div class="mt-4">
+                                <div class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Tujuan Komunikasi Klinis:</div>
+                                <p id="sim-comm-goal" class="text-xs text-slate-600 bg-emerald-50/70 border border-emerald-100 p-3 rounded-xl">
+                                    Lakukan salam terapeutik, kaji skala nyeri (PQRST), dan tenangkan pasien.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Bantuan Frasa Medis (Scaffolding) -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-heading font-bold text-sm text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                                    <span>Bantuan Frasa Medis (Scaffolding)</span>
+                                </h4>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">Klik untuk pakai</span>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-3">Bingung mulai bicara apa? Klik contoh kalimat di bawah ini untuk memasukkannya ke kolom bicara:</p>
+                            <div id="sim-scaffolding-list" class="space-y-2">
+                                <!-- Diisi dinamis -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Voice/Text Chat -->
+                    <div class="lg:col-span-8 flex flex-col bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-h-[560px]">
+                        <!-- Chat Header -->
+                        <div class="px-5 py-3.5 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-3">
+                                <div class="relative">
+                                    <div class="w-9 h-9 rounded-full bg-brand-500 flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-headset"></i>
+                                    </div>
+                                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-slate-900 rounded-full"></span>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold flex items-center gap-2">
+                                        <span>Virtual Patient AI Simulator</span>
+                                        <button type="button" onclick="toggleTTS()" id="tts-toggle-btn" title="Aktifkan/Matikan Suara Pasien" class="text-xs px-2 py-0.5 rounded bg-white/15 hover:bg-white/25 text-brand-200 transition">
+                                            <i class="fa-solid fa-volume-high"></i> Suara ON
+                                        </button>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400">Berbicaralah dalam Bahasa Inggris sebagai Perawat</div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="finishSimulationAndGrade()" class="px-3.5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-flag-checkered"></i>
+                                <span>Selesaikan Sesi & Evaluasi Rubrik</span>
+                            </button>
+                        </div>
+
+                        <!-- Chat Messages Area -->
+                        <div id="sim-chat-box" class="flex-1 p-5 overflow-y-auto space-y-4 bg-slate-50/70 max-h-[380px]">
+                            <!-- Pesan percakapan muncul di sini -->
+                        </div>
+
+                        <!-- Voice & Text Input Controls -->
+                        <div class="p-4 bg-white border-t border-slate-200">
+                            <div id="speech-status-bar" class="hidden mb-2 px-3 py-1.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium flex items-center justify-between">
+                                <span class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
+                                    Mendengarkan suara Anda (English)... Silakan bicara!
+                                </span>
+                                <button type="button" onclick="stopSpeechRecognition()" class="underline font-bold">Berhenti</button>
+                            </div>
+
+                            <form onsubmit="handleSendNurseMessage(event)" class="flex items-center gap-2.5">
+                                <!-- Mic Button (Web Speech API) -->
+                                <button type="button" id="mic-btn" onclick="toggleSpeechRecognition()" title="Klik untuk Bicara (Speech-to-Text)" 
+                                    class="w-11 h-11 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 flex items-center justify-center shrink-0 transition">
+                                    <i class="fa-solid fa-microphone text-lg"></i>
+                                </button>
+
+                                <input type="text" id="nurse-input" placeholder="Klik mikrofon untuk bicara atau ketik kalimat bahasa Inggris Anda..." 
+                                    class="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white">
+
+                                <button type="submit" class="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl text-sm transition flex items-center gap-2 shrink-0">
+                                    <span>Kirim</span>
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            <div class="mt-2 flex items-center justify-between text-[11px] text-slate-400">
+                                <span><i class="fa-solid fa-circle-info mr-1"></i>Tip: Gunakan kalimat pembuka yang ramah, empatik & tanyakan keluhan pasien.</span>
+                                <span id="turn-counter" class="font-semibold text-slate-600">Giliran Bicara: 0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RUBRIC FEEDBACK PANEL (Muncul setelah simulasi selesai) -->
+                <div id="rubric-result-panel" class="hidden mt-6 bg-white rounded-2xl border-2 border-brand-500 p-6 shadow-xl fade-in">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+                        <div>
+                            <span class="px-3 py-1 rounded-full bg-brand-100 text-brand-800 text-xs font-bold">Hasil Evaluasi AI Berbasis Rubrik</span>
+                            <h3 class="font-heading text-xl font-bold text-slate-900 mt-2">Umpan Balik Performa Komunikasi Klinis</h3>
+                        </div>
+                        <div class="flex items-center gap-3 bg-brand-50 px-5 py-3 rounded-2xl border border-brand-200">
+                            <div class="text-right">
+                                <div class="text-xs font-semibold text-brand-700">Skor Akhir AI</div>
+                                <div class="text-[11px] text-brand-600" id="rubric-predicate">Sangat Baik</div>
+                            </div>
+                            <div id="rubric-total-score" class="text-3xl font-heading font-extrabold text-brand-700">85</div>
+                        </div>
+                    </div>
+
+                    <!-- 4 Kriteria Rubrik -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-slate-700">1. Fluency & Confidence</span>
+                                <span id="score-fluency" class="text-sm font-extrabold text-brand-600">0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
+                                <div id="bar-fluency" class="bg-brand-500 h-full rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-500">Kelancaran merespons dan keberanian menginisiasi percakapan.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-slate-700">2. Clinical Vocabulary</span>
+                                <span id="score-vocab" class="text-sm font-extrabold text-indigo-600">0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
+                                <div id="bar-vocab" class="bg-indigo-500 h-full rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-500">Ketepatan penggunaan istilah medis & keperawatan bahasa Inggris.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-slate-700">3. Empathy & Therapeutic</span>
+                                <span id="score-empathy" class="text-sm font-extrabold text-emerald-600">0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
+                                <div id="bar-empathy" class="bg-emerald-500 h-full rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-500">Sikap empati, salam pembuka, dan menenangkan kecemasan pasien.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-slate-700">4. Grammar & Clarity</span>
+                                <span id="score-grammar" class="text-sm font-extrabold text-amber-600">0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mb-2">
+                                <div id="bar-grammar" class="bg-amber-500 h-full rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p class="text-[11px] text-slate-500">Kejelasan struktur kalimat agar mudah dipahami pasien.</p>
+                        </div>
+                    </div>
+
+                    <!-- Deteksi Kesalahan & Saran Perbaikan Spesifik -->
+                    <div class="bg-amber-50/80 border border-amber-200 rounded-xl p-4 mb-5 space-y-1.5">
+                        <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Analisis Kesalahan & Rekomendasi AI:
+                        </h4>
+                        <p id="rubric-weakness-text" class="text-xs font-semibold text-rose-800"></p>
+                        <p id="rubric-feedback-text" class="text-sm text-amber-900/90 leading-relaxed"></p>
+                    </div>
+
+                    <div class="flex flex-wrap justify-end gap-3">
+                        <button type="button" onclick="switchStudentTab('cases')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+                            Coba Kasus Lain
+                        </button>
+                        <button type="button" onclick="goToReflectionWithLastCase()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-2">
+                            <span>Lanjut ke Jurnal Refleksi AI</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU 4: JURNAL REFLEKSI AI (2 SUB-TAB TERINTEGRASI) -->
+            <div id="student-view-reflection" class="hidden fade-in space-y-5">
+                
+                <!-- Sub-Tab Switcher di dalam Jurnal Refleksi AI -->
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex gap-2">
+                        <button type="button" onclick="switchReflectionSubTab('write')" id="ref-subtab-write" class="px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-robot"></i>
+                            <span>Refleksi & Mitra Bertanya AI</span>
+                        </button>
+                        <button type="button" onclick="switchReflectionSubTab('history')" id="ref-subtab-history" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            <span>Evaluasi & Riwayat Skor</span>
+                        </button>
+                    </div>
+                    <span class="text-xs text-slate-500 hidden sm:inline">Refleksi metakognitif membantu mengatasi kecemasan berbicara</span>
+                </div>
+
+                <!-- SUB-TAB A: REFLEKSI & MITRA BERTANYA AI -->
+                <div id="reflection-subview-write" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Form Tulis Refleksi -->
+                    <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-pen-nib"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-heading font-bold text-lg text-slate-900">Jurnal Refleksi Pengalaman Speaking</h3>
+                                <p class="text-xs text-slate-500">Ceritakan perasaan & kendala Anda saat berbicara bahasa Inggris klinis.</p>
+                            </div>
+                        </div>
+
+                        <form onsubmit="handleReflectionSubmit(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Pilih Kasus Terkait</label>
+                                <select id="ref-case-select" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                                    <!-- Diisi JS -->
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Tingkat Kecemasan Berbicara (Skala 1 = Sangat Tenang, 5 = Sangat Cemas)</label>
+                                <div class="grid grid-cols-5 gap-2">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="ref-anxiety" value="1 (Sangat Tenang)" class="peer sr-only">
+                                        <div class="py-2 px-1 text-center rounded-xl border border-slate-200 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 text-[11px] font-bold">
+                                            1 • Tenang
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="ref-anxiety" value="2 (Cukup Tenang)" checked class="peer sr-only">
+                                        <div class="py-2 px-1 text-center rounded-xl border border-slate-200 peer-checked:border-brand-500 peer-checked:bg-brand-50 text-[11px] font-bold">
+                                            2 • Rileks
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="ref-anxiety" value="3 (Sedang)" class="peer sr-only">
+                                        <div class="py-2 px-1 text-center rounded-xl border border-slate-200 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 text-[11px] font-bold">
+                                            3 • Sedang
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="ref-anxiety" value="4 (Cukup Cemas)" class="peer sr-only">
+                                        <div class="py-2 px-1 text-center rounded-xl border border-slate-200 peer-checked:border-amber-500 peer-checked:bg-amber-50 text-[11px] font-bold">
+                                            4 • Gugup
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="ref-anxiety" value="5 (Sangat Cemas)" class="peer sr-only">
+                                        <div class="py-2 px-1 text-center rounded-xl border border-slate-200 peer-checked:border-rose-500 peer-checked:bg-rose-50 text-[11px] font-bold">
+                                            5 • Cemas
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Refleksi (Boleh Bahasa Indonesia / Inggris)</label>
+                                <textarea id="ref-content" rows="4" required placeholder="Contoh: Tadi saya sempat ragu saat menanyakan riwayat keluhan karena takut salah past tense, namun bantuan frasa sangat membantu saya berani mulai bicara..." 
+                                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-robot"></i>
+                                <span>Simpan & Minta Pertanyaan Reflektif AI</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- AI Mitra Bertanya (Socratic Questioning) & Daftar Jurnal -->
+                    <div class="lg:col-span-6 space-y-5">
+                        <!-- Kotak Mitra Bertanya AI -->
+                        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-lg">
+                            <div class="flex items-center gap-2.5 mb-3">
+                                <span class="px-2.5 py-1 rounded-lg bg-indigo-500/30 border border-indigo-400/30 text-indigo-200 text-xs font-bold">
+                                    <i class="fa-solid fa-sparkles mr-1"></i> AI Mitra Bertanya (Socratic Mentor)
+                                </span>
+                            </div>
+                            <p id="ai-socratic-prompt" class="text-sm text-indigo-100 leading-relaxed">
+                                "Tuliskan refleksi Anda di samping. Saya akan mengajukan pertanyaan pemantik metakognitif untuk membantu Anda mengenali kekuatan komunikasi Anda dan merencanakan langkah belajar berikutnya."
+                            </p>
+                            
+                            <!-- Balas Pertanyaan AI -->
+                            <div id="ai-followup-box" class="hidden mt-4 pt-4 border-t border-white/15 space-y-2.5">
+                                <label class="block text-xs font-semibold text-indigo-200">Jawaban Lanjutan Anda untuk AI:</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="ai-followup-input" placeholder="Tulis jawaban reflektif singkat Anda..." 
+                                        class="flex-1 px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white placeholder-indigo-300/60 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                    <button type="button" onclick="saveReflectionFollowup()" class="px-3.5 py-2 bg-indigo-500 hover:bg-indigo-600 rounded-xl text-xs font-bold transition">
+                                        Simpan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Riwayat Jurnal Refleksi Saya -->
+                        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                            <h4 class="font-heading font-bold text-sm text-slate-900 mb-3">Catatan Jurnal Refleksi Saya</h4>
+                            <div id="student-reflections-list" class="space-y-3 max-h-[320px] overflow-y-auto pr-1">
+                                <!-- Diisi via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-TAB B: EVALUASI & RIWAYAT SKOR LENGKAP -->
+                <div id="reflection-subview-history" class="hidden bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                    <div>
+                        <h3 class="font-heading font-bold text-lg text-slate-900">Evaluasi & Riwayat Skor Sesi Simulasi</h3>
+                        <p class="text-xs text-slate-500">Rincian skor 4 aspek rubrik, deteksi kesalahan/kelemahan dari AI, serta nilai & feedback resmi dari Dosen.</p>
+                    </div>
+                    
+                    <div id="student-detailed-history-list" class="space-y-4">
+                        <!-- Diisi via JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- ==================== VIEW 3: DOSEN (ADMIN) DASHBOARD ==================== -->
+        <main id="lecturer-dashboard" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+            
+            <!-- Top KPI Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Total Mahasiswa Aktif</div>
+                        <div id="kpi-total-students" class="text-2xl font-heading font-extrabold text-slate-900">0</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Rata-rata Skor Kelas</div>
+                        <div id="kpi-avg-score" class="text-2xl font-heading font-extrabold text-slate-900">0</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Total Sesi Simulasi</div>
+                        <div id="kpi-total-sessions" class="text-2xl font-heading font-extrabold text-slate-900">0</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Bank Kasus Klinis</div>
+                        <div id="kpi-total-cases" class="text-2xl font-heading font-extrabold text-slate-900">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lecturer 3 Main Navigation Tabs -->
+            <div class="flex flex-wrap gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
+                <button type="button" onclick="switchLecturerTab('monitoring')" id="lec-tab-monitoring" class="px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 text-white shadow-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Progres & Analisis Mahasiswa</span>
+                </button>
+                <button type="button" onclick="switchLecturerTab('crud')" id="lec-tab-crud" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Bank Kasus</span>
+                </button>
+                <button type="button" onclick="switchLecturerTab('journals')" id="lec-tab-journals" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2">
+                    <i class="fa-solid fa-book-open-reader"></i>
+                    <span>Tinjauan Jurnal Refleksi</span>
+                </button>
+            </div>
+
+            <!-- MENU 1 DOSEN: PROGRES & ANALISIS MAHASISWA -->
+            <div id="lecturer-view-monitoring" class="fade-in space-y-6">
+                
+                <!-- Rata-Rata Skor Kelas pada 4 Aspek Rubrik -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <h3 class="font-heading font-bold text-base text-slate-900 mb-1">Rata-rata Skor Kelas per 4 Aspek Rubrik</h3>
+                    <p class="text-xs text-slate-500 mb-4">Pemetaan capaian seluruh mahasiswa pada 4 dimensi komunikasi keperawatan</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 rounded-xl bg-brand-50/60 border border-brand-100">
+                            <div class="text-xs font-bold text-brand-800 mb-1">1. Fluency & Confidence</div>
+                            <div id="class-avg-fluency" class="text-2xl font-heading font-extrabold text-brand-700">0</div>
+                            <div class="w-full h-1.5 bg-brand-100 rounded-full mt-2 overflow-hidden">
+                                <div id="class-bar-fluency" class="h-full bg-brand-600 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-indigo-50/60 border border-indigo-100">
+                            <div class="text-xs font-bold text-indigo-800 mb-1">2. Clinical Vocabulary</div>
+                            <div id="class-avg-vocab" class="text-2xl font-heading font-extrabold text-indigo-700">0</div>
+                            <div class="w-full h-1.5 bg-indigo-100 rounded-full mt-2 overflow-hidden">
+                                <div id="class-bar-vocab" class="h-full bg-indigo-600 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-emerald-50/60 border border-emerald-100">
+                            <div class="text-xs font-bold text-emerald-800 mb-1">3. Empathy & Therapeutic</div>
+                            <div id="class-avg-empathy" class="text-2xl font-heading font-extrabold text-emerald-700">0</div>
+                            <div class="w-full h-1.5 bg-emerald-100 rounded-full mt-2 overflow-hidden">
+                                <div id="class-bar-empathy" class="h-full bg-emerald-600 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-100">
+                            <div class="text-xs font-bold text-amber-800 mb-1">4. Grammar & Clarity</div>
+                            <div id="class-avg-grammar" class="text-2xl font-heading font-extrabold text-amber-700">0</div>
+                            <div class="w-full h-1.5 bg-amber-100 rounded-full mt-2 overflow-hidden">
+                                <div id="class-bar-grammar" class="h-full bg-amber-600 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabel Rekapitulasi Progres Per Mahasiswa -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div class="mb-5">
+                        <h3 class="font-heading font-bold text-lg text-slate-900">Rekapitulasi Progres & Analisis Kelemahan Per Mahasiswa</h3>
+                        <p class="text-xs text-slate-500">Deteksi otomatis aspek skor terendah mahasiswa beserta rata-rata skor AI dan nilai dosen.</p>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-200 text-[11px] font-bold uppercase text-slate-500 bg-slate-50">
+                                    <th class="py-3 px-4 rounded-tl-xl">Nama & NIM</th>
+                                    <th class="py-3 px-3 text-center">Jml Sesi</th>
+                                    <th class="py-3 px-3 text-center">Rata-rata AI</th>
+                                    <th class="py-3 px-3 text-center">Rata-rata Dosen</th>
+                                    <th class="py-3 px-4">Analisis Kesalahan & Kelemahan Otomatis</th>
+                                    <th class="py-3 px-4 rounded-tr-xl text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lecturer-student-summary-tbody" class="divide-y divide-slate-100 text-sm">
+                                <!-- Diisi JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Daftar Riwayat Sesi Mahasiswa untuk Penilaian & Feedback Langsung -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <div class="mb-4">
+                        <h3 class="font-heading font-bold text-lg text-slate-900">Daftar Riwayat Sesi Latihan Mahasiswa</h3>
+                        <p class="text-xs text-slate-500">Klik tombol <strong>"Beri Nilai & Feedback"</strong> pada sesi mahasiswa untuk memberikan nilai resmi (0-100) dan catatan pembinaan.</p>
+                    </div>
+                    <div id="lecturer-sessions-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Diisi JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU 2 DOSEN: CRUD BANK KASUS -->
+            <div id="lecturer-view-crud" class="hidden fade-in grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Form Tambah / Edit Kasus -->
+                <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm h-fit">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="crud-form-title" class="font-heading font-bold text-lg text-slate-900">Tambah Kasus Klinis Baru</h3>
+                        <button type="button" id="cancel-edit-btn" onclick="resetCaseForm()" class="hidden text-xs font-semibold text-rose-600 hover:underline">
+                            Batal Edit
+                        </button>
+                    </div>
+
+                    <form id="case-crud-form" onsubmit="handleSaveCase(event)" class="space-y-3.5">
+                        <input type="hidden" id="case-id">
+                        
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Skenario Kasus</label>
+                            <input type="text" id="case-title" required placeholder="Contoh: Pengkajian Nyeri Akut Post-Op" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Kategori Departemen</label>
+                                <input type="text" id="case-dept" required placeholder="Bedah / IGD / Anak" 
+                                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Tingkat Kesulitan</label>
+                                <select id="case-difficulty" class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <option value="Pemula">Pemula</option>
+                                    <option value="Menengah">Menengah</option>
+                                    <option value="Lanjut">Lanjut</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Profil Pasien (Nama & Usia)</label>
+                                <input type="text" id="case-patient" required placeholder="Mr. Robert Miller (48 thn)" 
+                                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Keluhan Utama</label>
+                                <input type="text" id="case-complaint" required placeholder="Nyeri area jahitan operasi" 
+                                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Deskripsi Rekam Medis Singkat</label>
+                            <textarea id="case-desc" rows="2" required placeholder="Ceritakan kondisi klinis pasien..." 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Tujuan Komunikasi Klinis</label>
+                            <input type="text" id="case-goal" required placeholder="Salam terapeutik, kaji skala nyeri PQRST, edukasi relaksasi" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Kunci Medis (Pisahkan dengan koma)</label>
+                            <input type="text" id="case-keywords" required placeholder="pain, scale, incision, breathe, medication, comfortable" 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Prompt / Kalimat Pembuka Pasien Virtual (English)</label>
+                            <input type="text" id="case-opening" required placeholder="Ouch... Nurse, my surgical wound hurts a lot when I move." 
+                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        </div>
+
+                        <button type="submit" id="crud-submit-btn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Simpan Kasus ke Database</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Daftar Kasus (Read, Edit, Delete) -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <h3 class="font-heading font-bold text-lg text-slate-900 mb-4">Daftar Bank Kasus Klinis</h3>
+                    <div id="lecturer-cases-list" class="space-y-3 max-h-[640px] overflow-y-auto pr-1">
+                        <!-- Diisi JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU 3 DOSEN: TINJAUAN JURNAL REFLEKSI -->
+            <div id="lecturer-view-journals" class="hidden fade-in bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-heading font-bold text-lg text-slate-900">Tinjauan Jurnal Refleksi & Dialog AI Mahasiswa</h3>
+                    <p class="text-xs text-slate-500">Tinjau tingkat kecemasan berbicara mahasiswa, dialog reflektif mereka dengan AI, serta berikan komentar pembinaan langsung.</p>
+                </div>
+                <div id="lecturer-journals-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Diisi JS -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ==================== JAVASCRIPT: DATABASE, AI & INTERACTION ENGINE ==================== -->
+    <script>
+        // ==================== STORAGE KEYS & SEED DATA ====================
+        const DB_KEYS = {
+            USERS: 'berani_v3_users',
+            CASES: 'berani_v3_cases',
+            SIMULATIONS: 'berani_v3_simulations',
+            REFLECTIONS: 'berani_v3_reflections',
+            CURRENT_USER: 'berani_v3_current_user'
+        };
+
+        const SEED_USERS = [
+            {
+                id: 'u-mhs-1',
+                role: 'mahasiswa',
+                name: 'Siti Aminah',
+                idNumber: '2023101045',
+                extra: 'Semester 5',
+                email: 'siti.aminah@mhs.ac.id',
+                password: '123'
+            },
+            {
+                id: 'u-mhs-2',
+                role: 'mahasiswa',
+                name: 'Rizky Pratama',
+                idNumber: '2023101088',
+                extra: 'Semester 5',
+                email: 'rizky.pratama@mhs.ac.id',
+                password: '123'
+            },
+            {
+                id: 'u-dsn-1',
+                role: 'dosen',
+                name: 'Ns. Dr. Budi Santoso, M.Kep',
+                idNumber: '0412088501',
+                extra: 'Keperawatan Medikal Bedah',
+                email: 'budi.santoso@dosen.ac.id',
+                password: '123'
+            }
+        ];
+
+        const SEED_CASES = [
+            {
+                id: 'case-1',
+                title: 'Pengkajian Nyeri Akut Post-Op',
+                department: 'Keperawatan Bedah',
+                difficulty: 'Menengah',
+                patientName: 'Mr. Robert Miller (48 thn)',
+                chiefComplaint: 'Nyeri akut pada area jahitan operasi abdomen',
+                description: 'Pasien 6 jam pasca operasi apendektomi mengeluh nyeri tajam saat menarik napas dalam atau bergerak. Tanda vital: TD 135/85 mmHg, Nadi 94x/menit.',
+                commGoal: 'Ucapkan salam terapeutik, kaji skala nyeri (0-10), berikan posisi nyaman, dan edukasi teknik napas dalam.',
+                keywords: ['nurse', 'pain', 'scale', 'incision', 'breathe', 'comfortable', 'medication', 'help'],
+                openingLine: "Ouch... Nurse, please help me. My stomach hurts really badly near the stitches whenever I try to move.",
+                scaffolding: [
+                    "Hello Mr. Miller, I am Nurse Siti. I am here to help you with your pain.",
+                    "On a scale from 0 to 10, how severe is your pain right now?",
+                    "Please try to take a slow, deep breath while I check your dressing."
+                ]
+            },
+            {
+                id: 'case-2',
+                title: 'Edukasi Diet Pasien Hipertensi',
+                department: 'Keperawatan Komunitas',
+                difficulty: 'Pemula',
+                patientName: 'Mrs. Eleanor Vance (59 thn)',
+                chiefComplaint: 'Tekanan darah tinggi (160/95 mmHg) & pusing ringan',
+                description: 'Pasien kontrol rutin di poliklinik dengan riwayat hipertensi tidak terkontrol karena masih sering mengonsumsi makanan kaleng dan tinggi garam.',
+                commGoal: 'Berikan edukasi diet rendah garam (DASH diet) dengan bahasa yang sopan, empatik, dan mudah dipahami.',
+                keywords: ['blood pressure', 'salt', 'sodium', 'diet', 'vegetables', 'fruits', 'water', 'medication'],
+                openingLine: "Good morning, Nurse. The doctor said my blood pressure is high again, even though I feel fine. Do I really need to change my food?",
+                scaffolding: [
+                    "Good morning Mrs. Vance. Yes, controlling your salt intake is very important for your heart.",
+                    "Try to eat more fresh fruits and vegetables instead of canned food.",
+                    "Do you have any questions about your daily meal plan?"
+                ]
+            },
+            {
+                id: 'case-3',
+                title: 'Triase Gawat Darurat Sesak Napas',
+                department: 'Gawat Darurat (IGD)',
+                difficulty: 'Lanjut',
+                patientName: 'Mr. David Chen (34 thn)',
+                chiefComplaint: 'Sesak napas akut & mengi (riwayat asma)',
+                description: 'Pasien datang ke IGD dengan napas cepat (RR 28x/menit), tampak gelisah, SpO2 91%, dan kesulitan menyelesaikan kalimat panjang.',
+                commGoal: 'Tenangkan pasien dengan instruksi singkat & jelas, posisikan semi-Fowler, dan siapkan terapi oksigen/nebulizer.',
+                keywords: ['breathe', 'oxygen', 'sit up', 'calm', 'inhaler', 'asthma', 'chest', 'slowly'],
+                openingLine: "Nurse... I can't... catch my breath... My chest feels... so tight...",
+                scaffolding: [
+                    "Stay calm Mr. Chen, I am your nurse. Let me help you sit up straight.",
+                    "I am going to give you oxygen now. Please breathe slowly through your nose.",
+                    "Have you used your asthma inhaler today?"
+                ]
+            },
+            {
+                id: 'case-4',
+                title: 'Komunikasi Terapeutik Kecemasan Pre-Op',
+                department: 'Keperawatan Perioperatif',
+                difficulty: 'Pemula',
+                patientName: 'Ms. Clara Jenkins (27 thn)',
+                chiefComplaint: 'Cemas berat menjelang operasi pertama kali',
+                description: 'Pasien dijadwalkan menjalani operasi pengangkatan kista dalam 1 jam ke depan. Pasien tampak berkeringat dingin dan takut terhadap anestesi.',
+                commGoal: 'Validasi perasaan cemas pasien secara empatik, jelaskan prosedur singkat, dan pastikan puasa pre-op.',
+                keywords: ['worry', 'safe', 'surgery', 'anesthesia', 'fasting', 'questions', 'team', 'relax'],
+                openingLine: "Nurse, I'm really scared. This is my first surgery ever. What if I wake up during the operation?",
+                scaffolding: [
+                    "It is completely normal to feel nervous, Ms. Clara. You are in very safe hands.",
+                    "Our anesthesia team will monitor you closely throughout the entire surgery.",
+                    "Just to confirm, when was the last time you ate or drank anything?"
+                ]
+            }
+        ];
+
+        const SEED_SIMULATIONS = [
+            {
+                id: 'sim-seed-1',
+                userId: 'u-mhs-1',
+                userName: 'Siti Aminah',
+                userIdNumber: '2023101045',
+                caseId: 'case-2',
+                caseTitle: 'Edukasi Diet Pasien Hipertensi',
+                date: '14 Nov 2026, 09:30',
+                scores: { fluency: 76, vocab: 78, empathy: 84, grammar: 66, total: 76 },
+                weaknessDetail: 'Kelemahan pada Grammar & Clarity (66): Sering keliru menggunakan bentuk kalimat tanya dan tense saat menanyakan riwayat pola makan.',
+                feedback: 'Sapaan empatik sudah baik, namun perbaiki struktur pertanyaan seperti "What did you eat yesterday?" dan tambahkan istilah "sodium intake".',
+                lecturerScore: 80,
+                lecturerFeedback: 'Siti sudah berani memulai edukasi dengan ramah. Perhatikan penggunaan past tense saat mengkaji riwayat kebiasaan makan pasien.'
+            },
+            {
+                id: 'sim-seed-2',
+                userId: 'u-mhs-1',
+                userName: 'Siti Aminah',
+                userIdNumber: '2023101045',
+                caseId: 'case-1',
+                caseTitle: 'Pengkajian Nyeri Akut Post-Op',
+                date: '15 Nov 2026, 14:15',
+                scores: { fluency: 84, vocab: 82, empathy: 90, grammar: 72, total: 82 },
+                weaknessDetail: 'Kelemahan pada Grammar & Clarity (72): Masih terdapat sedikit keraguan dalam menyusun instruksi teknik relaksasi napas dalam.',
+                feedback: 'Peningkatan kelancaran dan empati yang sangat bagus! Pertahankan pengkajian skala nyeri 0-10 secara sistematis.',
+                lecturerScore: 86,
+                lecturerFeedback: 'Progres sangat baik! Intonasi menenangkan pasien post-op sudah terdengar natural dan profesional.'
+            },
+            {
+                id: 'sim-seed-3',
+                userId: 'u-mhs-2',
+                userName: 'Rizky Pratama',
+                userIdNumber: '2023101088',
+                caseId: 'case-3',
+                caseTitle: 'Triase Gawat Darurat Sesak Napas',
+                date: '15 Nov 2026, 16:40',
+                scores: { fluency: 64, vocab: 74, empathy: 70, grammar: 68, total: 69 },
+                weaknessDetail: 'Kelemahan pada Fluency & Confidence (64): Jeda keraguan tinggi saat memberikan instruksi darurat dan kalimat terlalu panjang.',
+                feedback: 'Pada kasus gawat darurat sesak napas, gunakan kalimat instruksi yang singkat, tegas, dan menenangkan seperti "Sit up slowly and breathe through your nose."',
+                lecturerScore: null,
+                lecturerFeedback: ''
+            }
+        ];
+
+        const SEED_REFLECTIONS = [
+            {
+                id: 'ref-seed-1',
+                userId: 'u-mhs-1',
+                userName: 'Siti Aminah',
+                userIdNumber: '2023101045',
+                caseTitle: 'Pengkajian Nyeri Akut Post-Op',
+                anxiety: '2 (Cukup Tenang)',
+                content: 'Pada simulasi kedua ini saya jauh lebih berani berbicara menggunakan mikrofon dibanding percobaan pertama. Awalnya saya agak bingung merangkai kalimat instruksi napas dalam, tapi frasa bantuan sangat menolong.',
+                aiQuestion: 'Perkembangan yang hebat, Siti! Apa strategi spesifik yang membuat rasa gugup Anda turun dari sesi pertama ke sesi kedua, dan bagaimana Anda akan melatih kalimat instruksi tanpa melihat bantuan teks?',
+                studentFollowup: 'Saya mencoba menarik napas dulu sebelum menekan tombol mikrofon dan membayangkan pasien benar-benar ada di depan saya.',
+                lecturerComment: 'Refleksi yang sangat matang Siti. Teknik visualisasi sebelum berbicara sangat efektif untuk mengurangi kecemasan klinis.',
+                date: '15 Nov 2026, 14:30'
+            }
+        ];
+
+        function initDatabase() {
+            if (!localStorage.getItem(DB_KEYS.USERS)) localStorage.setItem(DB_KEYS.USERS, JSON.stringify(SEED_USERS));
+            if (!localStorage.getItem(DB_KEYS.CASES)) localStorage.setItem(DB_KEYS.CASES, JSON.stringify(SEED_CASES));
+            if (!localStorage.getItem(DB_KEYS.SIMULATIONS)) localStorage.setItem(DB_KEYS.SIMULATIONS, JSON.stringify(SEED_SIMULATIONS));
+            if (!localStorage.getItem(DB_KEYS.REFLECTIONS)) localStorage.setItem(DB_KEYS.REFLECTIONS, JSON.stringify(SEED_REFLECTIONS));
+        }
+
+        const getDB = (key) => JSON.parse(localStorage.getItem(key) || '[]');
+        const setDB = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+        const getCurrentUser = () => JSON.parse(localStorage.getItem(DB_KEYS.CURRENT_USER) || 'null');
+
+        // ==================== UI NOTIFICATIONS & MODAL ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-600 text-white',
+                error: 'bg-rose-600 text-white',
+                info: 'bg-slate-800 text-white'
+            };
+            const icons = {
+                success: 'fa-circle-check',
+                error: 'fa-circle-exclamation',
+                info: 'fa-circle-info'
+            };
+            toast.className = `${colors[type]} px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-xs font-semibold pointer-events-auto fade-in`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-base"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function openModal(title, bodyHtml, footerHtml) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-body').innerHTML = bodyHtml;
+            document.getElementById('modal-footer').innerHTML = footerHtml;
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // ==================== AUTHENTICATION LOGIC ====================
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const loginBtn = document.getElementById('tab-login-btn');
+            const regBtn = document.getElementById('tab-register-btn');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                loginBtn.className = 'flex-1 py-2 text-sm font-semibold rounded-lg bg-white text-brand-700 shadow-sm transition';
+                regBtn.className = 'flex-1 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                regBtn.className = 'flex-1 py-2 text-sm font-semibold rounded-lg bg-white text-brand-700 shadow-sm transition';
+                loginBtn.className = 'flex-1 py-2 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+            }
+        }
+
+        function updateRegRoleFields() {
+            const role = document.querySelector('input[name="reg-role"]:checked').value;
+            const idLabel = document.getElementById('reg-id-label');
+            const idInput = document.getElementById('reg-idnumber');
+            const extraLabel = document.getElementById('reg-extra-label');
+            const extraInput = document.getElementById('reg-extra');
+
+            if (role === 'mahasiswa') {
+                idLabel.innerText = 'NIM (Nomor Induk Mahasiswa)';
+                idInput.placeholder = '2023101045';
+                extraLabel.innerText = 'Semester';
+                extraInput.placeholder = 'Semester 5';
+            } else {
+                idLabel.innerText = 'NIDN (Nomor Induk Dosen Nasional)';
+                idInput.placeholder = '0412088501';
+                extraLabel.innerText = 'Mata Kuliah Pengampu';
+                extraInput.placeholder = 'Keperawatan Medikal Bedah';
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const role = document.querySelector('input[name="reg-role"]:checked').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const idNumber = document.getElementById('reg-idnumber').value.trim();
+            const extra = document.getElementById('reg-extra').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+
+            const users = getDB(DB_KEYS.USERS);
+            if (users.some(u => u.email === email || u.idNumber === idNumber)) {
+                showToast('Email atau NIM/NIDN sudah terdaftar!', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: 'u-' + Date.now(),
+                role,
+                name,
+                idNumber,
+                extra,
+                email,
+                password
+            };
+
+            users.push(newUser);
+            setDB(DB_KEYS.USERS, users);
+            localStorage.setItem(DB_KEYS.CURRENT_USER, JSON.stringify(newUser));
+            
+            showToast(`Pendaftaran berhasil! Selamat datang, ${name}`);
+            renderAppSession();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('login-identifier').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            const users = getDB(DB_KEYS.USERS);
+            const user = users.find(u => 
+                (u.email.toLowerCase() === identifier || u.idNumber.toLowerCase() === identifier) && 
+                u.password === password
+            );
+
+            if (!user) {
+                showToast('Email/NIM atau kata sandi salah!', 'error');
+                return;
+            }
+
+            localStorage.setItem(DB_KEYS.CURRENT_USER, JSON.stringify(user));
+            showToast(`Berhasil masuk sebagai ${user.role.toUpperCase()}`);
+            renderAppSession();
+        }
+
+
+        function handleLogout() {
+            stopSpeechRecognition();
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            localStorage.removeItem(DB_KEYS.CURRENT_USER);
+            document.getElementById('app-shell').classList.add('hidden');
+            document.getElementById('auth-view').classList.remove('hidden');
+            showToast('Anda telah keluar dari sesi.', 'info');
+        }
+
+        // ==================== SESSION ROUTER ====================
+        function renderAppSession() {
+            const user = getCurrentUser();
+            if (!user) {
+                document.getElementById('auth-view').classList.remove('hidden');
+                document.getElementById('app-shell').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('auth-view').classList.add('hidden');
+            document.getElementById('app-shell').classList.remove('hidden');
+
+            document.getElementById('nav-user-name').innerText = user.name;
+            const rolePrefix = user.role === 'mahasiswa' ? 'NIM: ' : 'NIDN: ';
+            const extraInfo = user.extra ? ` • ${user.extra}` : '';
+            document.getElementById('nav-user-id').innerText = rolePrefix + user.idNumber + extraInfo;
+            document.getElementById('nav-user-avatar').innerText = user.name.charAt(0).toUpperCase();
+            
+            const badge = document.getElementById('nav-role-badge');
+            if (user.role === 'mahasiswa') {
+                badge.innerText = 'Mahasiswa (User)';
+                badge.className = 'px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-brand-100 text-brand-800';
+                document.getElementById('student-dashboard').classList.remove('hidden');
+                document.getElementById('lecturer-dashboard').classList.add('hidden');
+                initStudentDashboard();
+            } else {
+                badge.innerText = 'Dosen (Admin)';
+                badge.className = 'px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-indigo-100 text-indigo-800';
+                document.getElementById('lecturer-dashboard').classList.remove('hidden');
+                document.getElementById('student-dashboard').classList.add('hidden');
+                initLecturerDashboard();
+            }
+        }
+
+        // ==================== STUDENT DASHBOARD LOGIC ====================
+        let activeCase = null;
+        let chatHistory = [];
+        let ttsEnabled = true;
+        let recognition = null;
+        let isRecording = false;
+        let lastSavedReflectionId = null;
+
+        function initStudentDashboard() {
+            renderStudentProgressDashboard();
+            renderStudentCases();
+            updateStudentStats();
+            populateReflectionCaseDropdown();
+            renderStudentReflections();
+            renderStudentDetailedHistory();
+            switchStudentTab('progress');
+        }
+
+        function switchStudentTab(tabName) {
+            const tabs = ['progress', 'cases', 'simulation', 'reflection'];
+            tabs.forEach(t => {
+                document.getElementById(`student-view-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`st-tab-${t}`);
+                btn.className = 'px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2';
+            });
+
+            document.getElementById(`student-view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`st-tab-${tabName}`);
+            activeBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-brand-600 text-white shadow-sm transition flex items-center gap-2';
+
+            if (tabName === 'progress') renderStudentProgressDashboard();
+            if (tabName === 'reflection') {
+                populateReflectionCaseDropdown();
+                renderStudentReflections();
+                renderStudentDetailedHistory();
+            }
+        }
+
+        function switchReflectionSubTab(subTab) {
+            const writeView = document.getElementById('reflection-subview-write');
+            const histView = document.getElementById('reflection-subview-history');
+            const writeBtn = document.getElementById('ref-subtab-write');
+            const histBtn = document.getElementById('ref-subtab-history');
+
+            if (subTab === 'write') {
+                writeView.classList.remove('hidden');
+                histView.classList.add('hidden');
+                writeBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-sm transition flex items-center gap-2';
+                histBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2';
+            } else {
+                writeView.classList.add('hidden');
+                histView.classList.remove('hidden');
+                histBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-sm transition flex items-center gap-2';
+                writeBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2';
+                renderStudentDetailedHistory();
+            }
+        }
+
+        function analyzeStudentWeakness(avgAspects) {
+            const aspects = [
+                { key: 'fluency', label: 'Fluency & Confidence', score: avgAspects.fluency, desc: 'Jeda keraguan cukup tinggi saat merespons pasien. Latih kelancaran berbicara menggunakan tombol mikrofon dan frasa bantuan.' },
+                { key: 'vocab', label: 'Clinical Vocabulary', score: avgAspects.vocab, desc: 'Penggunaan terminologi medis & keperawatan bahasa Inggris masih terbatas. Pelajari kata kunci klinis sebelum memulai simulasi.' },
+                { key: 'empathy', label: 'Empathy & Therapeutic', score: avgAspects.empathy, desc: 'Ungkapan empati terapeutik dan kalimat penenang pasien perlu ditingkatkan di awal dan akhir percakapan.' },
+                { key: 'grammar', label: 'Grammar & Clarity', score: avgAspects.grammar, desc: 'Sering keliru menggunakan past tense saat menanyakan riwayat keluhan & struktur kalimat tanya perlu dirapikan.' }
+            ];
+            aspects.sort((a, b) => a.score - b.score);
+            const lowest = aspects[0];
+            if (lowest.score >= 85) {
+                return {
+                    lowestAspect: 'Kompetensi Sangat Baik (≥85)',
+                    summary: 'Seluruh aspek komunikasi klinis Anda sudah berada di atas standar kompetensi. Pertahankan konsistensi pada kasus tingkat Lanjut!'
+                };
+            }
+            return {
+                lowestAspect: `Kelemahan pada ${lowest.label} (${lowest.score})`,
+                summary: `Kelemahan pada ${lowest.label} (${lowest.score}): ${lowest.desc}`
+            };
+        }
+
+        function renderStudentProgressDashboard() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            document.getElementById('prog-welcome-title').innerText = `Halo, ${user.name}!`;
+
+            const sims = getDB(DB_KEYS.SIMULATIONS).filter(s => s.userId === user.id);
+
+            document.getElementById('prog-total-sessions').innerText = sims.length;
+
+            if (sims.length === 0) {
+                document.getElementById('prog-avg-score').innerHTML = `0 <span class="text-xs font-normal text-slate-400">/100</span>`;
+                document.getElementById('prog-lecturer-avg').innerText = '-';
+                document.getElementById('prog-confidence-level').innerText = 'Pemula';
+                document.getElementById('prog-weakness-summary').innerText = 'Anda belum menyelesaikan simulasi pasien virtual. Pilih kasus di menu Bank Kasus untuk mulai berlatih!';
+                document.getElementById('prog-chart-container').innerHTML = `<p class="text-xs text-slate-400">Grafik akan muncul setelah Anda menyelesaikan minimal 1 sesi simulasi.</p>`;
+                document.getElementById('prog-lecturer-feedback-list').innerHTML = `<p class="text-xs text-slate-400 col-span-2">Belum ada feedback dari dosen.</p>`;
+                return;
+            }
+
+            const avgTotal = Math.round(sims.reduce((a, s) => a + s.scores.total, 0) / sims.length);
+            const avgFluency = Math.round(sims.reduce((a, s) => a + s.scores.fluency, 0) / sims.length);
+            const avgVocab = Math.round(sims.reduce((a, s) => a + s.scores.vocab, 0) / sims.length);
+            const avgEmpathy = Math.round(sims.reduce((a, s) => a + s.scores.empathy, 0) / sims.length);
+            const avgGrammar = Math.round(sims.reduce((a, s) => a + s.scores.grammar, 0) / sims.length);
+
+            document.getElementById('prog-avg-score').innerHTML = `${avgTotal} <span class="text-xs font-normal text-slate-400">/100</span>`;
+
+            // Level Kepercayaan Diri Speaking
+            let confLabel = 'Mulai Berani';
+            if (avgFluency >= 85) confLabel = 'Sangat Percaya Diri';
+            else if (avgFluency >= 75) confLabel = 'Berani & Komunikatif';
+            document.getElementById('prog-confidence-level').innerText = confLabel;
+
+            // Rata-rata nilai dosen
+            const gradedSims = sims.filter(s => s.lecturerScore !== null && s.lecturerScore !== undefined && s.lecturerScore !== '');
+            if (gradedSims.length > 0) {
+                const lecAvg = Math.round(gradedSims.reduce((a, s) => a + Number(s.lecturerScore), 0) / gradedSims.length);
+                document.getElementById('prog-lecturer-avg').innerHTML = `${lecAvg} <span class="text-xs font-normal text-slate-400">/100</span>`;
+            } else {
+                document.getElementById('prog-lecturer-avg').innerHTML = `<span class="text-xs font-semibold text-amber-600">Menunggu</span>`;
+            }
+
+            // Progress Bars 4 Aspek
+            document.getElementById('prog-aspect-fluency-val').innerText = `${avgFluency} / 100`;
+            document.getElementById('prog-aspect-fluency-bar').style.width = `${avgFluency}%`;
+
+            document.getElementById('prog-aspect-vocab-val').innerText = `${avgVocab} / 100`;
+            document.getElementById('prog-aspect-vocab-bar').style.width = `${avgVocab}%`;
+
+            document.getElementById('prog-aspect-empathy-val').innerText = `${avgEmpathy} / 100`;
+            document.getElementById('prog-aspect-empathy-bar').style.width = `${avgEmpathy}%`;
+
+            document.getElementById('prog-aspect-grammar-val').innerText = `${avgGrammar} / 100`;
+            document.getElementById('prog-aspect-grammar-bar').style.width = `${avgGrammar}%`;
+
+            // Analisis Kelemahan Otomatis
+            const analysis = analyzeStudentWeakness({ fluency: avgFluency, vocab: avgVocab, empathy: avgEmpathy, grammar: avgGrammar });
+            document.getElementById('prog-weakness-summary').innerText = analysis.summary;
+
+            // Render Grafik SVG Perkembangan Skor
+            const chronologicalSims = [...sims].reverse().slice(-7);
+            renderProgressSVGChart(chronologicalSims);
+
+            // Render Kotak Feedback Dosen Terbaru
+            const feedbackContainer = document.getElementById('prog-lecturer-feedback-list');
+            if (gradedSims.length === 0) {
+                feedbackContainer.innerHTML = `<div class="col-span-2 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-500">Dosen belum memberikan penilaian atau catatan feedback pada sesi latihan Anda.</div>`;
+            } else {
+                feedbackContainer.innerHTML = gradedSims.slice(0, 4).map(s => `
+                    <div class="p-4 rounded-xl bg-indigo-50/60 border border-indigo-100 space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-indigo-900">${s.caseTitle}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-extrabold">Nilai Dosen: ${s.lecturerScore}</span>
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">"${s.lecturerFeedback || 'Sudah dinilai oleh dosen.'}"</p>
+                        <div class="text-[10px] text-slate-400">Sesi: ${s.date} • Skor AI: ${s.scores.total}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderProgressSVGChart(sessions) {
+            const container = document.getElementById('prog-chart-container');
+            const width = 420;
+            const height = 180;
+            const padX = 36;
+            const padY = 26;
+
+            if (sessions.length === 1) {
+                const s = sessions[0];
+                container.innerHTML = `
+                    <svg viewBox="0 0 ${width} ${height}" class="w-full h-full">
+                        <line x1="${padX}" y1="${height - padY}" x2="${width - padX}" y2="${height - padY}" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <circle cx="${width / 2}" cy="${height / 2}" r="8" fill="#0d9488"/>
+                        <text x="${width / 2}" y="${height / 2 - 14}" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f766e">${s.scores.total}</text>
+                        <text x="${width / 2}" y="${height - 8}" text-anchor="middle" font-size="10" fill="#64748b">Sesi 1</text>
+                    </svg>
+                `;
+                return;
+            }
+
+            const stepX = (width - padX * 2) / (sessions.length - 1);
+            const points = sessions.map((s, idx) => {
+                const x = padX + idx * stepX;
+                const normalized = Math.max(0, Math.min(100, s.scores.total));
+                const y = (height - padY) - ((normalized / 100) * (height - padY * 2));
+                return { x, y, score: s.scores.total, label: `Sesi ${idx + 1}` };
+            });
+
+            const polylinePoints = points.map(p => `${p.x},${p.y}`).join(' ');
+
+            container.innerHTML = `
+                <svg viewBox="0 0 ${width} ${height}" class="w-full h-full overflow-visible">
+                    <line x1="${padX}" y1="${padY}" x2="${width - padX}" y2="${padY}" stroke="#e2e8f0" stroke-dasharray="4"/>
+                    <line x1="${padX}" y1="${height / 2}" x2="${width - padX}" y2="${height / 2}" stroke="#e2e8f0" stroke-dasharray="4"/>
+                    <line x1="${padX}" y1="${height - padY}" x2="${width - padX}" y2="${height - padY}" stroke="#cbd5e1" stroke-width="1.5"/>
+                    
+                    <text x="8" y="${padY + 4}" font-size="9" fill="#94a3b8">100</text>
+                    <text x="12" y="${height / 2 + 3}" font-size="9" fill="#94a3b8">50</text>
+                    <text x="16" y="${height - padY}" font-size="9" fill="#94a3b8">0</text>
+
+                    <polyline fill="none" stroke="#0d9488" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${polylinePoints}"/>
+                    
+                    ${points.map(p => `
+                        <circle cx="${p.x}" cy="${p.y}" r="5.5" fill="#ffffff" stroke="#0d9488" stroke-width="3"/>
+                        <text x="${p.x}" y="${p.y - 10}" text-anchor="middle" font-size="11" font-weight="bold" fill="#0f766e">${p.score}</text>
+                        <text x="${p.x}" y="${height - 8}" text-anchor="middle" font-size="10" fill="#64748b">${p.label}</text>
+                    `).join('')}
+                </svg>
+            `;
+        }
+
+        function updateStudentStats() {
+            const user = getCurrentUser();
+            const sims = getDB(DB_KEYS.SIMULATIONS).filter(s => s.userId === user.id);
+            const avg = sims.length ? Math.round(sims.reduce((acc, s) => acc + s.scores.total, 0) / sims.length) : 0;
+            document.getElementById('student-avg-score').innerHTML = `${avg} <span class="text-xs font-normal">/ 100</span>`;
+        }
+
+        function renderStudentCases() {
+            const cases = getDB(DB_KEYS.CASES);
+            const filter = document.getElementById('filter-difficulty').value;
+            const filtered = filter === 'ALL' ? cases : cases.filter(c => c.difficulty === filter);
+
+            document.getElementById('cases-count').innerText = filtered.length;
+            const grid = document.getElementById('student-cases-grid');
+
+            const diffColors = {
+                'Pemula': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                'Menengah': 'bg-amber-50 text-amber-700 border-amber-200',
+                'Lanjut': 'bg-rose-50 text-rose-700 border-rose-200'
+            };
+
+            grid.innerHTML = filtered.map(c => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-brand-300 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-[11px] font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg">${c.department}</span>
+                            <span class="text-[11px] font-bold px-2.5 py-1 rounded-lg border ${diffColors[c.difficulty] || 'bg-slate-100'}">${c.difficulty}</span>
+                        </div>
+                        <h4 class="font-heading font-bold text-base text-slate-900 mb-2">${c.title}</h4>
+                        <div class="text-xs text-slate-500 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-injured text-slate-400"></i>
+                            <span class="font-semibold text-slate-700">${c.patientName}</span>
+                        </div>
+                        <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4">${c.description}</p>
+                    </div>
+                    <button type="button" onclick="startCaseSimulation('${c.id}')" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-microphone"></i>
+                        <span>Mulai Praktik Pasien Virtual</span>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ==================== VIRTUAL PATIENT SIMULATION & AI ENGINE ====================
+        function startCaseSimulation(caseId) {
+            const cases = getDB(DB_KEYS.CASES);
+            activeCase = cases.find(c => c.id === caseId);
+            if (!activeCase) return;
+
+            chatHistory = [];
+            document.getElementById('rubric-result-panel').classList.add('hidden');
+            document.getElementById('no-case-selected').classList.add('hidden');
+            document.getElementById('active-simulation-workspace').classList.remove('hidden');
+
+            document.getElementById('sim-dept-badge').innerText = activeCase.department;
+            document.getElementById('sim-diff-badge').innerText = activeCase.difficulty;
+            document.getElementById('sim-case-title').innerText = activeCase.title;
+            document.getElementById('sim-patient-name').innerText = activeCase.patientName;
+            document.getElementById('sim-chief-complaint').innerText = 'Keluhan: ' + activeCase.chiefComplaint;
+            document.getElementById('sim-scenario-desc').innerText = activeCase.description;
+            document.getElementById('sim-comm-goal').innerText = activeCase.commGoal;
+
+            const phrases = activeCase.scaffolding || [
+                `Hello ${activeCase.patientName.split(' ')[0]}, I am your nurse today. How are you feeling?`,
+                "Could you tell me more about your symptoms?",
+                "Please don't worry, I am here to help you."
+            ];
+            document.getElementById('sim-scaffolding-list').innerHTML = phrases.map(p => `
+                <button type="button" onclick="useScaffoldingPhrase('${p.replace(/'/g, "\\'")}')" 
+                    class="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 text-xs text-slate-700 transition flex items-start gap-2 group">
+                    <i class="fa-solid fa-quote-left text-brand-500 mt-0.5 text-[10px]"></i>
+                    <span class="group-hover:text-brand-900">"${p}"</span>
+                </button>
+            `).join('');
+
+            const chatBox = document.getElementById('sim-chat-box');
+            chatBox.innerHTML = '';
+            document.getElementById('turn-counter').innerText = 'Giliran Bicara: 0';
+
+            switchStudentTab('simulation');
+            addChatBubble('patient', activeCase.openingLine);
+            speakEnglishText(activeCase.openingLine);
+        }
+
+        function useScaffoldingPhrase(phrase) {
+            const input = document.getElementById('nurse-input');
+            input.value = phrase;
+            input.focus();
+        }
+
+        function addChatBubble(sender, text) {
+            const chatBox = document.getElementById('sim-chat-box');
+            const isNurse = sender === 'nurse';
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex ${isNurse ? 'justify-end' : 'justify-start'} fade-in`;
+            
+            wrapper.innerHTML = `
+                <div class="max-w-[82%] ${isNurse ? 'bg-brand-600 text-white rounded-2xl rounded-tr-sm' : 'bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-tl-sm'} px-4 py-3 shadow-sm">
+                    <div class="flex items-center justify-between gap-3 mb-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider ${isNurse ? 'text-brand-100' : 'text-indigo-600'}">
+                            ${isNurse ? 'Anda (Perawat)' : activeCase.patientName}
+                        </span>
+                        ${!isNurse ? `<button type="button" onclick="speakEnglishText('${text.replace(/'/g, "\\'")}')" title="Dengarkan Ulang" class="text-slate-400 hover:text-indigo-600 text-xs"><i class="fa-solid fa-volume-high"></i></button>` : ''}
+                    </div>
+                    <p class="text-sm leading-relaxed">${text}</p>
+                </div>
+            `;
+            chatBox.appendChild(wrapper);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleSendNurseMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('nurse-input');
+            const text = input.value.trim();
+            if (!text || !activeCase) return;
+
+            input.value = '';
+            chatHistory.push({ sender: 'nurse', text });
+            addChatBubble('nurse', text);
+
+            const nurseTurns = chatHistory.filter(m => m.sender === 'nurse').length;
+            document.getElementById('turn-counter').innerText = `Giliran Bicara: ${nurseTurns}`;
+
+            setTimeout(() => {
+                const reply = generateVirtualPatientReply(text, nurseTurns, activeCase);
+                chatHistory.push({ sender: 'patient', text: reply });
+                addChatBubble('patient', reply);
+                speakEnglishText(reply);
+            }, 600);
+        }
+
+        function generateVirtualPatientReply(nurseText, turn, caseObj) {
+            const lower = nurseText.toLowerCase();
+            
+            if (lower.includes('scale') || lower.includes('0 to 10') || lower.includes('1 to 10') || lower.includes('how severe')) {
+                return "I would say the pain is around 7 out of 10 right now. It hurts especially when I move. What should I do, Nurse?";
+            }
+            if (lower.includes('name') || lower.includes('birth') || lower.includes('allerg')) {
+                return `My full name is ${caseObj.patientName.split('(')[0].trim()}, and I don't have any drug allergies. Thank you for checking carefully, Nurse.`;
+            }
+            if (lower.includes('calm') || lower.includes('worry') || lower.includes('nervous') || lower.includes('safe') || lower.includes('here to help')) {
+                return "Hearing that from you makes me feel much calmer and safer, Nurse. Thank you for reassuring me.";
+            }
+            if (lower.includes('eat') || lower.includes('drink') || lower.includes('salt') || lower.includes('diet') || lower.includes('fasting') || lower.includes('fruits')) {
+                return "Oh, I understand now! Thank you for explaining that so clearly. I will definitely follow your advice.";
+            }
+            if (lower.includes('breathe') || lower.includes('oxygen') || lower.includes('sit up') || lower.includes('inhaler') || lower.includes('vital')) {
+                return "Okay, Nurse... I am sitting up straight and trying to breathe slowly... That already feels a little bit easier.";
+            }
+            if (turn >= 3) {
+                return "Thank you so much, Nurse. Your explanation is very clear and comforting. I feel much better now!";
+            }
+            return "I see, Nurse. Could you explain a little more about what I need to do? I want to make sure I follow your instructions properly.";
+        }
+
+        // ==================== WEB SPEECH API (VOICE RECOGNITION & TTS) ====================
+        function toggleTTS() {
+            ttsEnabled = !ttsEnabled;
+            const btn = document.getElementById('tts-toggle-btn');
+            if (ttsEnabled) {
+                btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Suara ON';
+                btn.className = 'text-xs px-2 py-0.5 rounded bg-white/15 hover:bg-white/25 text-brand-200 transition';
+            } else {
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+                btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Suara OFF';
+                btn.className = 'text-xs px-2 py-0.5 rounded bg-rose-500/30 text-rose-200 transition';
+            }
+        }
+
+        function speakEnglishText(text) {
+            if (!ttsEnabled || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function toggleSpeechRecognition() {
+            if (isRecording) {
+                stopSpeechRecognition();
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                showToast('Browser Anda tidak mendukung Speech-to-Text. Silakan ketik langsung pada kolom teks.', 'info');
+                return;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = true;
+            recognition.continuous = false;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                document.getElementById('mic-btn').classList.add('mic-recording', 'bg-rose-600', 'text-white');
+                document.getElementById('speech-status-bar').classList.remove('hidden');
+            };
+
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    transcript += event.results[i][0].transcript;
+                }
+                document.getElementById('nurse-input').value = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                stopSpeechRecognition();
+                if (event.error !== 'aborted') {
+                    showToast('Mikrofon tidak menangkap suara dengan jelas. Coba lagi atau gunakan teks.', 'info');
+                }
+            };
+
+            recognition.onend = () => {
+                stopSpeechRecognition();
+            };
+
+            recognition.start();
+        }
+
+        function stopSpeechRecognition() {
+            isRecording = false;
+            if (recognition) {
+                try { recognition.stop(); } catch (e) {}
+            }
+            const micBtn = document.getElementById('mic-btn');
+            if (micBtn) micBtn.classList.remove('mic-recording', 'bg-rose-600', 'text-white');
+            const statusBar = document.getElementById('speech-status-bar');
+            if (statusBar) statusBar.classList.add('hidden');
+        }
+
+        // ==================== RUBRIC EVALUATION ENGINE ====================
+        function finishSimulationAndGrade() {
+            const nurseMessages = chatHistory.filter(m => m.sender === 'nurse');
+            if (nurseMessages.length === 0) {
+                showToast('Silakan berbicara atau kirim minimal 1 respons kepada pasien sebelum mengevaluasi!', 'error');
+                return;
+            }
+
+            const fullTranscript = nurseMessages.map(m => m.text).join(' ').toLowerCase();
+            const wordCount = fullTranscript.split(/\s+/).filter(Boolean).length;
+
+            // 1. Fluency & Confidence
+            const fluency = Math.min(96, Math.max(64, 62 + (nurseMessages.length * 7) + Math.min(15, Math.floor(wordCount / 3))));
+
+            // 2. Clinical Vocabulary
+            const keywords = activeCase.keywords || ['nurse', 'pain', 'help', 'feel'];
+            let matchedKw = 0;
+            keywords.forEach(kw => {
+                if (fullTranscript.includes(kw.toLowerCase())) matchedKw++;
+            });
+            const vocab = Math.min(96, Math.max(65, 65 + Math.round((matchedKw / keywords.length) * 30)));
+
+            // 3. Empathy & Therapeutic Communication
+            const empathyWords = ['hello', 'good morning', 'good afternoon', 'nurse', 'please', 'sorry', 'understand', 'calm', 'worry', 'help', 'safe', 'comfortable', 'thank'];
+            let empCount = 0;
+            empathyWords.forEach(ew => {
+                if (fullTranscript.includes(ew)) empCount++;
+            });
+            const empathy = Math.min(98, Math.max(66, 66 + (empCount * 5)));
+
+            // 4. Grammar & Clarity
+            const hasCapitalStart = /^[A-Z]/.test(nurseMessages[0].text.trim());
+            const hasQuestion = fullTranscript.includes('?') || /\b(how|what|when|where|do you|can you|could you|have you|are you)\b/.test(fullTranscript);
+            const grammar = Math.min(95, Math.max(64, 66 + (hasCapitalStart ? 8 : 0) + (hasQuestion ? 12 : 0) + Math.min(8, nurseMessages.length * 2)));
+
+            const total = Math.round((fluency + vocab + empathy + grammar) / 4);
+
+            // Deteksi kelemahan spesifik
+            let tips = [];
+            let weaknessList = [];
+            if (matchedKw < 3) {
+                tips.push(`Perkaya kosakata klinis terkait kasus ini seperti: "${keywords.slice(0, 4).join(', ')}".`);
+                weaknessList.push(`Kelemahan pada Clinical Vocabulary (${vocab}): Penggunaan istilah medis spesifik masih terbatas.`);
+            }
+            if (empCount < 2) {
+                tips.push('Awali percakapan dengan memperkenalkan diri sebagai perawat dan gunakan ungkapan empati seperti "Please stay calm, I am here to help you."');
+                weaknessList.push(`Kelemahan pada Empathy & Therapeutic (${empathy}): Kalimat sapaan terapeutik dan penenang pasien masih minim.`);
+            }
+            if (!hasQuestion) {
+                tips.push('Ajukan pertanyaan terbuka kepada pasien untuk menggali riwayat keluhan lebih dalam.');
+                weaknessList.push(`Kelemahan pada Grammar & Clarity (${grammar}): Kurang eksplorasi pengkajian menggunakan kalimat tanya.`);
+            }
+            if (nurseMessages.length < 2) {
+                weaknessList.push(`Kelemahan pada Fluency & Confidence (${fluency}): Durasi interaksi terlalu singkat dan jeda keraguan masih tinggi.`);
+            }
+
+            if (tips.length === 0) {
+                tips.push('Luar biasa! Anda menunjukkan komunikasi terapeutik yang percaya diri, empatik, dan menggunakan terminologi medis yang tepat.');
+            }
+            const weaknessDetail = weaknessList.length > 0 ? weaknessList[0] : 'Tidak ditemukan kesalahan signifikan; komunikasi klinis berjalan efektif.';
+            const feedbackText = tips.join(' ');
+
+            // Simpan ke Database Riwayat Simulasi
+            const user = getCurrentUser();
+            const simulations = getDB(DB_KEYS.SIMULATIONS);
+            const nowStr = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            simulations.unshift({
+                id: 'sim-' + Date.now(),
+                userId: user.id,
+                userName: user.name,
+                userIdNumber: user.idNumber,
+                caseId: activeCase.id,
+                caseTitle: activeCase.title,
+                date: nowStr,
+                scores: { fluency, vocab, empathy, grammar, total },
+                weaknessDetail,
+                feedback: feedbackText,
+                lecturerScore: null,
+                lecturerFeedback: ''
+            });
+            setDB(DB_KEYS.SIMULATIONS, simulations);
+            updateStudentStats();
+            renderStudentProgressDashboard();
+
+            // Tampilkan Panel Hasil Rubrik
+            document.getElementById('rubric-total-score').innerText = total;
+            document.getElementById('rubric-predicate').innerText = total >= 85 ? 'Sangat Baik (Kompeten)' : total >= 75 ? 'Baik (Cukup Berani)' : 'Perlu Latihan Lanjutan';
+            
+            document.getElementById('score-fluency').innerText = fluency;
+            document.getElementById('bar-fluency').style.width = fluency + '%';
+            
+            document.getElementById('score-vocab').innerText = vocab;
+            document.getElementById('bar-vocab').style.width = vocab + '%';
+            
+            document.getElementById('score-empathy').innerText = empathy;
+            document.getElementById('bar-empathy').style.width = empathy + '%';
+            
+            document.getElementById('score-grammar').innerText = grammar;
+            document.getElementById('bar-grammar').style.width = grammar + '%';
+
+            document.getElementById('rubric-weakness-text').innerText = weaknessDetail;
+            document.getElementById('rubric-feedback-text').innerText = feedbackText;
+
+            const panel = document.getElementById('rubric-result-panel');
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth' });
+            showToast('Sesi selesai! Skor rubrik dan analisis kelemahan telah disimpan.');
+        }
+
+        function goToReflectionWithLastCase() {
+            switchStudentTab('reflection');
+            switchReflectionSubTab('write');
+            if (activeCase) {
+                document.getElementById('ref-case-select').value = activeCase.title;
+            }
+        }
+
+        // ==================== REFLECTION JOURNAL & AI SOCRATIC MENTOR ====================
+        function populateReflectionCaseDropdown() {
+            const cases = getDB(DB_KEYS.CASES);
+            const select = document.getElementById('ref-case-select');
+            select.innerHTML = cases.map(c => `<option value="${c.title}">${c.title}</option>`).join('');
+        }
+
+        function handleReflectionSubmit(e) {
+            e.preventDefault();
+            const user = getCurrentUser();
+            const caseTitle = document.getElementById('ref-case-select').value;
+            const anxiety = document.querySelector('input[name="ref-anxiety"]:checked').value;
+            const content = document.getElementById('ref-content').value.trim();
+
+            if (!content) return;
+
+            const aiQuestion = generateSocraticQuestion(anxiety, content, caseTitle);
+
+            const reflections = getDB(DB_KEYS.REFLECTIONS);
+            const newId = 'ref-' + Date.now();
+            const nowStr = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            reflections.unshift({
+                id: newId,
+                userId: user.id,
+                userName: user.name,
+                userIdNumber: user.idNumber,
+                caseTitle,
+                anxiety,
+                content,
+                aiQuestion,
+                studentFollowup: '',
+                lecturerComment: '',
+                date: nowStr
+            });
+
+            setDB(DB_KEYS.REFLECTIONS, reflections);
+            lastSavedReflectionId = newId;
+
+            document.getElementById('ai-socratic-prompt').innerText = `"${aiQuestion}"`;
+            document.getElementById('ai-followup-box').classList.remove('hidden');
+            document.getElementById('ref-content').value = '';
+
+            renderStudentReflections();
+            showToast('Jurnal refleksi disimpan! AI Mitra Bertanya telah merespons.');
+        }
+
+        function generateSocraticQuestion(anxiety, content, caseTitle) {
+            const lower = content.toLowerCase();
+            if (anxiety.startsWith('4') || anxiety.startsWith('5') || lower.includes('takut') || lower.includes('gugup') || lower.includes('ragu')) {
+                return `Wajar sekali merasa gugup saat berlatih kasus "${caseTitle}". Menurut Anda, bagian kalimat mana yang sebenarnya sudah berhasil Anda sampaikan dengan baik, dan frasa pembuka sederhana apa yang ingin Anda kuasai agar lebih tenang pada percobaan berikutnya?`;
+            }
+            if (lower.includes('grammar') || lower.includes('tense') || lower.includes('kosakata') || lower.includes('istilah')) {
+                return `Kesadaran Anda terhadap kendala bahasa pada kasus "${caseTitle}" adalah langkah metakognitif yang bagus! Bagaimana cara Anda melatih 3 kosakata medis baru tersebut agar otomatis terucap saat berhadapan dengan pasien nyata?`;
+            }
+            return `Luar biasa! Anda menunjukkan kepercayaan diri yang positif pada kasus "${caseTitle}". Jika pasien memberikan respons emosional yang lebih kompleks di rumah sakit nanti, bagaimana Anda akan menyesuaikan pendekatan komunikasi terapeutik Anda?`;
+        }
+
+        function saveReflectionFollowup() {
+            const ans = document.getElementById('ai-followup-input').value.trim();
+            if (!ans || !lastSavedReflectionId) return;
+
+            const reflections = getDB(DB_KEYS.REFLECTIONS);
+            const idx = reflections.findIndex(r => r.id === lastSavedReflectionId);
+            if (idx !== -1) {
+                reflections[idx].studentFollowup = ans;
+                setDB(DB_KEYS.REFLECTIONS, reflections);
+            }
+
+            document.getElementById('ai-followup-input').value = '';
+            document.getElementById('ai-followup-box').classList.add('hidden');
+            renderStudentReflections();
+            showToast('Jawaban reflektif lanjutan Anda telah tersimpan!');
+        }
+
+        function renderStudentReflections() {
+            const user = getCurrentUser();
+            const refs = getDB(DB_KEYS.REFLECTIONS).filter(r => r.userId === user.id);
+            const container = document.getElementById('student-reflections-list');
+
+            if (refs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Belum ada catatan jurnal refleksi. Mulai tulis refleksi pertama Anda!</p>`;
+                return;
+            }
+
+            container.innerHTML = refs.map(r => `
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-800">${r.caseTitle}</span>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800">Kecemasan: ${r.anxiety}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 italic">"${r.content}"</p>
+                    <div class="p-2.5 rounded-lg bg-indigo-50/70 border border-indigo-100 text-[11px] text-indigo-900">
+                        <strong class="block text-indigo-700 mb-0.5"><i class="fa-solid fa-robot mr-1"></i>Pertanyaan AI:</strong>
+                        ${r.aiQuestion}
+                        ${r.studentFollowup ? `<div class="mt-1.5 pt-1.5 border-t border-indigo-200 text-slate-700"><strong>Jawaban Anda:</strong> ${r.studentFollowup}</div>` : ''}
+                    </div>
+                    ${r.lecturerComment ? `
+                        <div class="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-900">
+                            <strong class="text-emerald-800"><i class="fa-solid fa-user-doctor mr-1"></i>Komentar Pembinaan Dosen:</strong> ${r.lecturerComment}
+                        </div>
+                    ` : ''}
+                    <div class="text-[10px] text-slate-400 text-right">${r.date}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderStudentDetailedHistory() {
+            const user = getCurrentUser();
+            const sims = getDB(DB_KEYS.SIMULATIONS).filter(s => s.userId === user.id);
+            const container = document.getElementById('student-detailed-history-list');
+
+            if (sims.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-xs text-slate-400 bg-slate-50 rounded-xl border border-slate-200">Belum ada riwayat evaluasi sesi simulasi. Silakan mulai latihan di Bank Kasus!</div>`;
+                return;
+            }
+
+            container.innerHTML = sims.map(s => `
+                <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200/80">
+                        <div>
+                            <div class="text-xs text-slate-400">${s.date}</div>
+                            <h4 class="font-heading font-bold text-base text-slate-900">${s.caseTitle}</h4>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-3 py-1 rounded-xl text-xs font-extrabold ${s.scores.total >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                Skor AI: ${s.scores.total}/100
+                            </span>
+                            ${s.lecturerScore !== null && s.lecturerScore !== undefined && s.lecturerScore !== '' 
+                                ? `<span class="px-3 py-1 rounded-xl text-xs font-extrabold bg-indigo-600 text-white">Nilai Dosen: ${s.lecturerScore}/100</span>`
+                                : `<span class="px-3 py-1 rounded-xl text-xs font-semibold bg-slate-200 text-slate-600">Menunggu Nilai Dosen</span>`
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Rincian 4 Aspek -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                        <div class="p-2.5 rounded-xl bg-white border border-slate-200">
+                            <span class="text-slate-500 block text-[11px]">Fluency & Confidence</span>
+                            <strong class="text-brand-700 text-sm">${s.scores.fluency}/100</strong>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white border border-slate-200">
+                            <span class="text-slate-500 block text-[11px]">Clinical Vocabulary</span>
+                            <strong class="text-indigo-700 text-sm">${s.scores.vocab}/100</strong>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white border border-slate-200">
+                            <span class="text-slate-500 block text-[11px]">Empathy & Therapeutic</span>
+                            <strong class="text-emerald-700 text-sm">${s.scores.empathy}/100</strong>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-white border border-slate-200">
+                            <span class="text-slate-500 block text-[11px]">Grammar & Clarity</span>
+                            <strong class="text-amber-700 text-sm">${s.scores.grammar}/100</strong>
+                        </div>
+                    </div>
+
+                    <!-- Evaluasi & Area Perbaikan AI -->
+                    <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-950 space-y-1">
+                        <div><strong><i class="fa-solid fa-magnifying-glass-chart mr-1 text-amber-600"></i>Deteksi AI:</strong> ${s.weaknessDetail || s.feedback}</div>
+                        <div class="text-amber-900/80"><strong>Rekomendasi AI:</strong> ${s.feedback}</div>
+                    </div>
+
+                    <!-- Feedback Dosen jika ada -->
+                    ${s.lecturerFeedback ? `
+                        <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-950">
+                            <strong class="text-indigo-800 block mb-0.5"><i class="fa-solid fa-chalkboard-user mr-1"></i>Feedback Resmi Dosen:</strong>
+                            "${s.lecturerFeedback}"
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // ==================== LECTURER (ADMIN) DASHBOARD LOGIC ====================
+        function initLecturerDashboard() {
+            updateLecturerKPIs();
+            renderLecturerCasesList();
+            renderLecturerMonitoringAnalytics();
+            renderLecturerJournals();
+            switchLecturerTab('monitoring');
+        }
+
+        function switchLecturerTab(tabName) {
+            const tabs = ['monitoring', 'crud', 'journals'];
+            tabs.forEach(t => {
+                document.getElementById(`lecturer-view-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`lec-tab-${t}`);
+                btn.className = 'px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 transition flex items-center gap-2';
+            });
+
+            document.getElementById(`lecturer-view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`lec-tab-${tabName}`);
+            activeBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 text-white shadow-sm transition flex items-center gap-2';
+
+            if (tabName === 'monitoring') renderLecturerMonitoringAnalytics();
+            if (tabName === 'journals') renderLecturerJournals();
+        }
+
+        function updateLecturerKPIs() {
+            const users = getDB(DB_KEYS.USERS).filter(u => u.role === 'mahasiswa');
+            const sims = getDB(DB_KEYS.SIMULATIONS);
+            const cases = getDB(DB_KEYS.CASES);
+
+            const avgScore = sims.length ? Math.round(sims.reduce((sum, s) => sum + s.scores.total, 0) / sims.length) : 0;
+
+            document.getElementById('kpi-total-students').innerText = users.length;
+            document.getElementById('kpi-avg-score').innerText = avgScore + ' / 100';
+            document.getElementById('kpi-total-sessions').innerText = sims.length;
+            document.getElementById('kpi-total-cases').innerText = cases.length;
+        }
+
+        function renderLecturerMonitoringAnalytics() {
+            const students = getDB(DB_KEYS.USERS).filter(u => u.role === 'mahasiswa');
+            const sims = getDB(DB_KEYS.SIMULATIONS);
+
+            // 1. Rata-rata Kelas pada 4 Aspek Rubrik
+            if (sims.length > 0) {
+                const cFluency = Math.round(sims.reduce((a, s) => a + s.scores.fluency, 0) / sims.length);
+                const cVocab = Math.round(sims.reduce((a, s) => a + s.scores.vocab, 0) / sims.length);
+                const cEmpathy = Math.round(sims.reduce((a, s) => a + s.scores.empathy, 0) / sims.length);
+                const cGrammar = Math.round(sims.reduce((a, s) => a + s.scores.grammar, 0) / sims.length);
+
+                document.getElementById('class-avg-fluency').innerText = `${cFluency} / 100`;
+                document.getElementById('class-bar-fluency').style.width = `${cFluency}%`;
+
+                document.getElementById('class-avg-vocab').innerText = `${cVocab} / 100`;
+                document.getElementById('class-bar-vocab').style.width = `${cVocab}%`;
+
+                document.getElementById('class-avg-empathy').innerText = `${cEmpathy} / 100`;
+                document.getElementById('class-bar-empathy').style.width = `${cEmpathy}%`;
+
+                document.getElementById('class-avg-grammar').innerText = `${cGrammar} / 100`;
+                document.getElementById('class-bar-grammar').style.width = `${cGrammar}%`;
+            }
+
+            // 2. Tabel Rekapitulasi Progres Per Mahasiswa
+            const tbody = document.getElementById('lecturer-student-summary-tbody');
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-xs text-slate-400">Belum ada mahasiswa terdaftar.</td></tr>`;
+            } else {
+                tbody.innerHTML = students.map(st => {
+                    const stSims = sims.filter(s => s.userId === st.id);
+                    if (stSims.length === 0) {
+                        return `
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3.5 px-4">
+                                    <div class="font-bold text-xs text-slate-800">${st.name}</div>
+                                    <div class="text-[11px] text-slate-400">NIM: ${st.idNumber}</div>
+                                </td>
+                                <td class="py-3.5 px-3 text-center text-xs text-slate-400">0</td>
+                                <td class="py-3.5 px-3 text-center text-xs text-slate-400">-</td>
+                                <td class="py-3.5 px-3 text-center text-xs text-slate-400">-</td>
+                                <td class="py-3.5 px-4 text-xs text-slate-400 italic">Belum ada sesi simulasi</td>
+                                <td class="py-3.5 px-4 text-right text-xs text-slate-400">-</td>
+                            </tr>
+                        `;
+                    }
+
+                    const avgFlu = Math.round(stSims.reduce((a, s) => a + s.scores.fluency, 0) / stSims.length);
+                    const avgVoc = Math.round(stSims.reduce((a, s) => a + s.scores.vocab, 0) / stSims.length);
+                    const avgEmp = Math.round(stSims.reduce((a, s) => a + s.scores.empathy, 0) / stSims.length);
+                    const avgGra = Math.round(stSims.reduce((a, s) => a + s.scores.grammar, 0) / stSims.length);
+                    const avgTot = Math.round(stSims.reduce((a, s) => a + s.scores.total, 0) / stSims.length);
+
+                    const graded = stSims.filter(s => s.lecturerScore !== null && s.lecturerScore !== undefined && s.lecturerScore !== '');
+                    const avgLec = graded.length ? Math.round(graded.reduce((a, s) => a + Number(s.lecturerScore), 0) / graded.length) : null;
+
+                    const weaknessObj = analyzeStudentWeakness({ fluency: avgFlu, vocab: avgVoc, empathy: avgEmp, grammar: avgGra });
+
+                    return `
+                        <tr class="hover:bg-slate-50/90 transition align-top">
+                            <td class="py-3.5 px-4">
+                                <div class="font-bold text-xs text-slate-900">${st.name}</div>
+                                <div class="text-[11px] text-slate-400">NIM: ${st.idNumber}</div>
+                            </td>
+                            <td class="py-3.5 px-3 text-center">
+                                <span class="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold">${stSims.length}</span>
+                            </td>
+                            <td class="py-3.5 px-3 text-center">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-extrabold ${avgTot >= 80 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                    ${avgTot}
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-3 text-center">
+                                ${avgLec !== null 
+                                    ? `<span class="px-2.5 py-1 rounded-full text-xs font-extrabold bg-indigo-100 text-indigo-800">${avgLec}</span>`
+                                    : `<span class="text-[11px] text-slate-400">Belum dinilai</span>`
+                                }
+                            </td>
+                            <td class="py-3.5 px-4 max-w-md">
+                                <div class="text-[11px] font-bold text-rose-700 mb-0.5">${weaknessObj.lowestAspect}</div>
+                                <p class="text-[11px] text-slate-600 leading-snug">${weaknessObj.summary}</p>
+                            </td>
+                            <td class="py-3.5 px-4 text-right">
+                                <button type="button" onclick="openLecturerGradingModal('${stSims[0].id}')" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition inline-flex items-center gap-1.5 whitespace-nowrap">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <span>Beri Nilai & Feedback</span>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // 3. Render Daftar Riwayat Sesi Mahasiswa untuk Penilaian Per Sesi
+            const sessionsList = document.getElementById('lecturer-sessions-list');
+            if (sims.length === 0) {
+                sessionsList.innerHTML = `<p class="text-xs text-slate-400 col-span-2">Belum ada riwayat sesi mahasiswa.</p>`;
+            } else {
+                sessionsList.innerHTML = sims.map(s => `
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-1.5">
+                                <div>
+                                    <div class="font-bold text-xs text-slate-900">${s.userName} <span class="font-normal text-slate-500">(${s.userIdNumber})</span></div>
+                                    <div class="text-xs font-semibold text-brand-700">${s.caseTitle}</div>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-xs font-extrabold text-slate-800">AI: ${s.scores.total}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mb-2">${s.date}</div>
+                            <p class="text-[11px] text-rose-800 bg-rose-50/80 border border-rose-100 p-2 rounded-lg">${s.weaknessDetail || s.feedback}</p>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between gap-2">
+                            <div class="text-xs">
+                                ${s.lecturerScore !== null && s.lecturerScore !== undefined && s.lecturerScore !== ''
+                                    ? `<span class="font-bold text-indigo-700">Nilai Dosen: ${s.lecturerScore}/100</span>`
+                                    : `<span class="text-amber-600 font-semibold">Belum Dinilai</span>`
+                                }
+                            </div>
+                            <button type="button" onclick="openLecturerGradingModal('${s.id}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition">
+                                Beri Nilai & Feedback
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Modal Penilaian & Pemberian Feedback Dosen untuk Sesi Mahasiswa
+        function openLecturerGradingModal(simId) {
+            const sim = getDB(DB_KEYS.SIMULATIONS).find(s => s.id === simId);
+            if (!sim) return;
+
+            const bodyHtml = `
+                <div class="space-y-4 text-left">
+                    <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                        <div class="flex items-center justify-between mb-1">
+                            <div class="font-bold text-slate-900">${sim.userName} <span class="font-normal text-xs text-slate-500">(NIM: ${sim.userIdNumber})</span></div>
+                            <span class="px-2.5 py-0.5 rounded-lg bg-brand-100 text-brand-800 text-xs font-bold">Skor AI: ${sim.scores.total}</span>
+                        </div>
+                        <div class="text-xs font-semibold text-brand-700">${sim.caseTitle}</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">${sim.date}</div>
+                    </div>
+
+                    <div class="grid grid-cols-4 gap-2 text-center text-[11px]">
+                        <div class="p-2 rounded-lg bg-slate-50 border border-slate-200"><span class="block text-slate-400">Fluency</span><strong>${sim.scores.fluency}</strong></div>
+                        <div class="p-2 rounded-lg bg-slate-50 border border-slate-200"><span class="block text-slate-400">Vocab</span><strong>${sim.scores.vocab}</strong></div>
+                        <div class="p-2 rounded-lg bg-slate-50 border border-slate-200"><span class="block text-slate-400">Empathy</span><strong>${sim.scores.empathy}</strong></div>
+                        <div class="p-2 rounded-lg bg-slate-50 border border-slate-200"><span class="block text-slate-400">Grammar</span><strong>${sim.scores.grammar}</strong></div>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-amber-50/70 border border-amber-200 text-xs text-amber-950">
+                        <strong>Analisis AI:</strong> ${sim.weaknessDetail || sim.feedback}
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Skor Penilaian Dosen (0 - 100):</label>
+                        <input type="number" id="grade-lecturer-score" min="0" max="100" value="${sim.lecturerScore || sim.scores.total}" 
+                            class="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Umpan Balik Konstruktif Dosen:</label>
+                        <textarea id="grade-lecturer-feedback" rows="3" placeholder="Tuliskan masukan konstruktif untuk meningkatkan keberanian & kemampuan bahasa Inggris klinis mahasiswa..." 
+                            class="w-full px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">${sim.lecturerFeedback || ''}</textarea>
+                    </div>
+                </div>
+            `;
+
+            const footerHtml = `
+                <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold">Batal</button>
+                <button type="button" onclick="saveLecturerGrade('${sim.id}')" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow">Simpan Nilai & Feedback</button>
+            `;
+
+            openModal('Beri Nilai & Feedback Mahasiswa', bodyHtml, footerHtml);
+        }
+
+        function saveLecturerGrade(simId) {
+            const scoreVal = Number(document.getElementById('grade-lecturer-score').value);
+            const feedbackVal = document.getElementById('grade-lecturer-feedback').value.trim();
+
+            if (isNaN(scoreVal) || scoreVal < 0 || scoreVal > 100) {
+                showToast('Masukkan nilai valid antara 0 hingga 100.', 'error');
+                return;
+            }
+
+            const simulations = getDB(DB_KEYS.SIMULATIONS);
+            const idx = simulations.findIndex(s => s.id === simId);
+            if (idx !== -1) {
+                simulations[idx].lecturerScore = scoreVal;
+                simulations[idx].lecturerFeedback = feedbackVal || 'Sudah dinilai dan dievaluasi oleh dosen.';
+                setDB(DB_KEYS.SIMULATIONS, simulations);
+            }
+
+            closeModal();
+            renderLecturerMonitoringAnalytics();
+            updateLecturerKPIs();
+            showToast('Nilai dan feedback dosen berhasil disimpan & tampil di Dashboard Mahasiswa!');
+        }
+
+        // CRUD: CREATE & UPDATE CASE
+        function handleSaveCase(e) {
+            e.preventDefault();
+            const idInput = document.getElementById('case-id').value;
+            const title = document.getElementById('case-title').value.trim();
+            const department = document.getElementById('case-dept').value.trim();
+            const difficulty = document.getElementById('case-difficulty').value;
+            const patientName = document.getElementById('case-patient').value.trim();
+            const chiefComplaint = document.getElementById('case-complaint').value.trim();
+            const description = document.getElementById('case-desc').value.trim();
+            const commGoal = document.getElementById('case-goal').value.trim();
+            const keywords = document.getElementById('case-keywords').value.split(',').map(k => k.trim()).filter(Boolean);
+            const openingLine = document.getElementById('case-opening').value.trim();
+    
+
+            const cases = getDB(DB_KEYS.CASES);
+
+            if (idInput) {
+                const idx = cases.findIndex(c => c.id === idInput);
+                if (idx !== -1) {
+                    cases[idx] = {
+                        ...cases[idx],
+                        title, department, difficulty, patientName, chiefComplaint, description, commGoal, keywords, openingLine
+                    };
+                    showToast('Skenario kasus berhasil diperbarui!');
+                }
+            } else {
+                const newCase = {
+                    id: 'case-' + Date.now(),
+                    title,
+                    department,
+                    difficulty,
+                    patientName,
+                    chiefComplaint,
+                    description,
+                    commGoal,
+                    keywords,
+                    openingLine,
+                    scaffolding: [
+                        `Hello ${patientName.split(' ')[0]}, I am your nurse today. How can I help you?`,
+                        `Could you tell me more about your ${chiefComplaint.toLowerCase()}?`,
+                        "Please stay calm, I will check your condition and inform the doctor."
+                    ]
+                };
+                cases.unshift(newCase);
+                showToast('Kasus baru berhasil ditambahkan ke Bank Kasus!');
+            }
+
+            setDB(DB_KEYS.CASES, cases);
+            resetCaseForm();
+            renderLecturerCasesList();
+            updateLecturerKPIs();
+        }
+
+        function editCase(caseId) {
+            const c = getDB(DB_KEYS.CASES).find(item => item.id === caseId);
+            if (!c) return;
+
+            document.getElementById('case-id').value = c.id;
+            document.getElementById('case-title').value = c.title;
+            document.getElementById('case-dept').value = c.department;
+            document.getElementById('case-difficulty').value = c.difficulty;
+            document.getElementById('case-patient').value = c.patientName;
+            document.getElementById('case-complaint').value = c.chiefComplaint;
+            document.getElementById('case-desc').value = c.description;
+            document.getElementById('case-goal').value = c.commGoal;
+            document.getElementById('case-keywords').value = (c.keywords || []).join(', ');
+            document.getElementById('case-opening').value = c.openingLine;
+
+            document.getElementById('crud-form-title').innerText = 'Edit Skenario Kasus';
+            document.getElementById('crud-submit-btn').innerHTML = '<i class="fa-solid fa-check"></i><span>Simpan Perubahan</span>';
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            document.getElementById('case-crud-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetCaseForm() {
+            document.getElementById('case-crud-form').reset();
+            document.getElementById('case-id').value = '';
+            document.getElementById('crud-form-title').innerText = 'Tambah Kasus Klinis Baru';
+            document.getElementById('crud-submit-btn').innerHTML = '<i class="fa-solid fa-plus"></i><span>Simpan Kasus ke Database</span>';
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+        }
+
+        function confirmDeleteCase(caseId, caseTitle) {
+            openModal(
+                'Hapus Skenario Kasus?',
+                `Apakah Anda yakin ingin menghapus kasus <strong>"${caseTitle}"</strong> dari Bank Kasus? Tindakan ini tidak dapat dibatalkan.`,
+                `
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold">Batal</button>
+                    <button type="button" onclick="executeDeleteCase('${caseId}')" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold">Ya, Hapus Kasus</button>
+                `
+            );
+        }
+
+        function executeDeleteCase(caseId) {
+            const cases = getDB(DB_KEYS.CASES).filter(c => c.id !== caseId);
+            setDB(DB_KEYS.CASES, cases);
+            closeModal();
+            renderLecturerCasesList();
+            updateLecturerKPIs();
+            showToast('Kasus berhasil dihapus.', 'info');
+        }
+
+        function renderLecturerCasesList() {
+            const cases = getDB(DB_KEYS.CASES);
+            const container = document.getElementById('lecturer-cases-list');
+
+            if (cases.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">Belum ada kasus klinis di database.</p>`;
+                return;
+            }
+
+            container.innerHTML = cases.map(c => `
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-indigo-300 transition">
+                    <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-indigo-100 text-indigo-800">${c.department}</span>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-white border border-slate-200 text-slate-600">${c.difficulty}</span>
+                            </div>
+                            <h4 class="font-heading font-bold text-sm text-slate-900">${c.title}</h4>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="editCase('${c.id}')" title="Edit Kasus" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-amber-50 text-amber-600 border border-slate-200 text-xs font-semibold transition">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button type="button" onclick="confirmDeleteCase('${c.id}', '${c.title.replace(/'/g, "\\'")}')" title="Hapus Kasus" class="px-2.5 py-1.5 rounded-lg bg-white hover:bg-rose-50 text-rose-600 border border-slate-200 text-xs font-semibold transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 mb-1"><strong>Pasien:</strong> ${c.patientName} — ${c.chiefComplaint}</p>
+                    <p class="text-xs text-slate-500 line-clamp-2">${c.description}</p>
+                </div>
+            `).join('');
+        }
+
+        // MENU 3 DOSEN: TINJAUAN JURNAL REFLEKSI + KOMENTAR PEMBINAAN LANGSUNG
+        function renderLecturerJournals() {
+            const refs = getDB(DB_KEYS.REFLECTIONS);
+            const grid = document.getElementById('lecturer-journals-grid');
+
+            if (refs.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-slate-400 col-span-2 text-center py-8">Belum ada entri jurnal refleksi dari mahasiswa.</p>`;
+                return;
+            }
+
+            grid.innerHTML = refs.map(r => `
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-3">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between gap-2">
+                            <div>
+                                <div class="font-bold text-xs text-slate-900">${r.userName} <span class="font-normal text-slate-500">(${r.userIdNumber})</span></div>
+                                <div class="text-[11px] font-semibold text-brand-700">${r.caseTitle}</div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full bg-white border border-slate-200 text-[10px] font-bold text-slate-700">Kecemasan: ${r.anxiety}</span>
+                        </div>
+                        <p class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-100 leading-relaxed">"${r.content}"</p>
+                        <div class="p-3 rounded-xl bg-indigo-50/80 border border-indigo-100 text-[11px] text-indigo-950 space-y-1.5">
+                            <div><strong class="text-indigo-700"><i class="fa-solid fa-robot mr-1"></i>Pertanyaan AI:</strong> ${r.aiQuestion}</div>
+                            ${r.studentFollowup ? `<div class="pt-1.5 border-t border-indigo-200/70"><strong>Respon Mahasiswa:</strong> ${r.studentFollowup}</div>` : '<div class="text-indigo-400 italic">Mahasiswa belum membalas pertanyaan lanjutan.</div>'}
+                        </div>
+                    </div>
+
+                    <!-- Komentar Pembinaan Langsung Dosen pada Jurnal -->
+                    <div class="pt-2 border-t border-slate-200/80 space-y-2">
+                        ${r.lecturerComment ? `
+                            <div class="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+                                <strong class="text-emerald-800 block mb-0.5"><i class="fa-solid fa-user-doctor mr-1"></i>Komentar Pembinaan Anda:</strong>
+                                "${r.lecturerComment}"
+                            </div>
+                        ` : ''}
+                        <div class="flex gap-2">
+                            <input type="text" id="journal-comment-input-${r.id}" value="${r.lecturerComment || ''}" placeholder="Tulis komentar pembinaan dosen pada jurnal ini..." 
+                                class="flex-1 px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <button type="button" onclick="saveLecturerJournalComment('${r.id}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shrink-0">
+                                Simpan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveLecturerJournalComment(refId) {
+            const input = document.getElementById(`journal-comment-input-${refId}`);
+            if (!input) return;
+            const commentText = input.value.trim();
+
+            const refs = getDB(DB_KEYS.REFLECTIONS);
+            const idx = refs.findIndex(r => r.id === refId);
+            if (idx !== -1) {
+                refs[idx].lecturerComment = commentText;
+                setDB(DB_KEYS.REFLECTIONS, refs);
+                renderLecturerJournals();
+                showToast('Komentar pembinaan jurnal berhasil disimpan!');
+            }
+        }
+
+        // ==================== BOOTSTRAP APP ON WINDOW LOAD ====================
+        window.onload = function() {
+            initDatabase();
+            renderAppSession();
+        };
+    </script>
+</body>
+</html>
